@@ -121,7 +121,7 @@ class AdminProductController extends Controller
 
         $this->removeImage($product);
 
-        $disk = $this->storageDisk();
+        $disk = $this->imageDisk();
         $path = $request->file('image')->store('products', $disk);
 
         return [
@@ -136,11 +136,11 @@ class AdminProductController extends Controller
             return;
         }
 
-        Storage::disk($product->image_disk ?: $this->storageDisk())->delete($product->image_path);
+        Storage::disk($product->image_disk ?: $this->imageDisk())->delete($product->image_path);
     }
 
-    protected function storageDisk(): string
+    protected function imageDisk(): string
     {
-        return config('filesystems.default', 'local');
+        return 'public';
     }
 }
