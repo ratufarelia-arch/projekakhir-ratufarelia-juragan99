@@ -84,6 +84,70 @@ class ShopController extends Controller
         ));
     }
 
+    public function showProducts(Request $request): View
+    {
+        $search = $request->input('search');
+        $category = $request->input('category');
+        $cutType = $request->input('cut_type');
+
+        $products = Product::query()
+            ->when($search, function ($query, $value) {
+                $term = '%' . str_replace('%', '\\%', $value) . '%';
+                $query->where(function ($query) use ($term) {
+                    $query->where('name', 'like', $term)
+                        ->orWhere('description', 'like', $term);
+                });
+            })
+            ->when($category, function ($query, $value) {
+                $query->where('category', $value);
+            })
+            ->when($cutType, function ($query, $value) {
+                $query->where('cut_type', $value);
+            })
+            ->where('is_active', true)
+            ->orderByDesc('created_at')
+            ->paginate(18)
+            ->withQueryString();
+
+        $categories = Product::query()
+            ->whereNotNull('category')
+            ->where('category', '<>', '')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
+
+        $cutTypes = Product::query()
+            ->whereNotNull('cut_type')
+            ->where('cut_type', '<>', '')
+            ->distinct()
+            ->orderBy('cut_type')
+            ->pluck('cut_type');
+
+        $cartItems = $this->loadCartItems($request);
+        $cartQuantity = $cartItems->sum('quantity');
+        $cartTotal = $cartItems->reduce(function ($carry, $item) {
+            return $carry + ($item['product']->price * $item['quantity']);
+        }, 0);
+
+        $wishlistItems = $this->loadWishlistItems($request);
+        $wishlistCount = $wishlistItems->count();
+        $wishlistIds = $wishlistItems->pluck('id')->all();
+
+        return view('shop.products', compact(
+            'products',
+            'categories',
+            'cutTypes',
+            'cartItems',
+            'cartQuantity',
+            'cartTotal',
+            'wishlistItems',
+            'wishlistCount',
+            'wishlistIds',
+            'search',
+            'category',
+            'cutType'
+        ));
+    }
 
     public function showCart(Request $request): View
     {
