@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -10,8 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE `users` CHANGE `NAME` `name` VARCHAR(255) NOT NULL');
-        DB::statement('ALTER TABLE `users` CHANGE `PASSWORD` `password` VARCHAR(255) NOT NULL');
+        Schema::table('users', function (Blueprint $table) {
+            if (Schema::hasColumn('users', 'NAME') && ! Schema::hasColumn('users', 'name')) {
+                $table->renameColumn('NAME', 'name');
+            }
+
+            if (Schema::hasColumn('users', 'PASSWORD') && ! Schema::hasColumn('users', 'password')) {
+                $table->renameColumn('PASSWORD', 'password');
+            }
+        });
     }
 
     /**
@@ -19,7 +27,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('ALTER TABLE `users` CHANGE `name` `NAME` VARCHAR(255) NOT NULL');
-        DB::statement('ALTER TABLE `users` CHANGE `password` `PASSWORD` VARCHAR(255) NOT NULL');
+        Schema::table('users', function (Blueprint $table) {
+            if (Schema::hasColumn('users', 'name') && ! Schema::hasColumn('users', 'NAME')) {
+                $table->renameColumn('name', 'NAME');
+            }
+
+            if (Schema::hasColumn('users', 'password') && ! Schema::hasColumn('users', 'PASSWORD')) {
+                $table->renameColumn('password', 'PASSWORD');
+            }
+        });
     }
 };
