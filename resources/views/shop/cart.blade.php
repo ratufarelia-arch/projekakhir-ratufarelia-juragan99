@@ -90,6 +90,34 @@
                                     <div class="flex flex-col items-end gap-3 text-sm text-zinc-500">
                                         <p class="text-xs uppercase tracking-[0.4em] text-zinc-500">{{ __('Total') }}</p>
                                         <p class="text-xl font-semibold text-zinc-900">Rp {{ number_format($item['product']->price * $item['quantity'], 2) }}</p>
+                                        <div class="flex items-center gap-2">
+                                            <form action="{{ route('shop.cart.update', $item['product']) }}" method="POST" class="inline-flex">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="quantity" value="{{ max($item['quantity'] - 1, 0) }}">
+                                                <button type="submit" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">-</button>
+                                            </form>
+                                            <form action="{{ route('shop.cart.update', $item['product']) }}" method="POST" class="inline-flex">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="quantity" value="{{ $item['quantity'] + 1 }}">
+                                                <button type="submit" class="rounded-full border border-zinc-200 px-1 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">+</button>
+                                            </form>
+                                        </div>
+                                        <form action="{{ route('shop.cart.update', $item['product']) }}" method="POST" class="flex items-center gap-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <label class="sr-only" for="cart-quantity-{{ $item['product']->id }}">{{ __('Jumlah') }}</label>
+                                            <input
+                                                id="cart-quantity-{{ $item['product']->id }}"
+                                                name="quantity"
+                                                type="number"
+                                                min="0"
+                                                value="{{ $item['quantity'] }}"
+                                                class="w-16 rounded-2xl border border-zinc-200 bg-white px-3 py-1 text-sm text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-emerald-500/40"
+                                            >
+                                            <button type="submit" class="rounded-full border border-zinc-200 px-3 py-0.5 text-xs font-semibold uppercase tracking-[0.4em] text-zinc-500 transition hover:border-emerald-400">{{ __('Update') }}</button>
+                                        </form>
                                         <form method="POST" action="{{ route('shop.cart.remove', $item['product']) }}">
                                             @csrf
                                             @method('DELETE')
