@@ -44,7 +44,19 @@ class Product extends Model
         $disk = $this->image_disk ?: config('filesystems.default');
         /** @var FilesystemAdapter $storage */
         $storage = Storage::disk($disk);
+        $url = $storage->url($this->image_path);
 
-        return $storage->url($this->image_path);
+        return $this->normalizeStorageUrl($url, $disk);
+    }
+
+    protected function normalizeStorageUrl(string $url, string $disk): string
+    {
+        $driver = config("filesystems.disks.{$disk}.driver");
+
+        if ($driver !== 'local') {
+            return $url;
+        }
+
+        return preg_replace('#^https?://[^/]+#', '', $url) ?: $url;
     }
 }
