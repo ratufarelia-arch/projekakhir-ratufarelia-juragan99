@@ -60,19 +60,14 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-none flex-col gap-3 text-sm text-zinc-500">
-                                        <div class="flex items-center gap-2">
-                                            <form action="{{ route('shop.cart.update', $item['product']) }}" method="POST">
+                                        <div class="flex items-center gap-2" data-quantity-control>
+                                            <button type="button" data-action="decrement" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">-</button>
+                                            <span class="text-base font-semibold text-zinc-900" data-quantity-display>{{ $item['quantity'] }}</span>
+                                            <button type="button" data-action="increment" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">+</button>
+                                            <form action="{{ route('shop.cart.update', $item['product']) }}" method="POST" class="sr-only" data-quantity-form>
                                                 @csrf
                                                 @method('PATCH')
-                                                <input type="hidden" name="quantity" value="{{ max($item['quantity'] - 1, 0) }}">
-                                                <button type="submit" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">-</button>
-                                            </form>
-                                            <span class="text-base font-semibold text-zinc-900">{{ $item['quantity'] }}</span>
-                                            <form action="{{ route('shop.cart.update', $item['product']) }}" method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <input type="hidden" name="quantity" value="{{ $item['quantity'] + 1 }}">
-                                                <button type="submit" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">+</button>
+                                                <input type="hidden" name="quantity" value="{{ $item['quantity'] }}">
                                             </form>
                                             <form method="POST" action="{{ route('shop.cart.remove', $item['product']) }}" class="ml-auto">
                                                 @csrf
@@ -114,5 +109,48 @@
         </div>
 
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-quantity-control]').forEach(control => {
+                const display = control.querySelector('[data-quantity-display]');
+                const form = control.querySelector('[data-quantity-form]');
+                const input = form?.querySelector('input[name="quantity"]');
+                const decrement = control.querySelector('[data-action="decrement"]');
+                const increment = control.querySelector('[data-action="increment"]');
+
+                const adjustButtons = (current) => {
+                    if (!decrement) {
+                        return;
+                    }
+                    const isDisabled = current <= 1;
+                    decrement.disabled = isDisabled;
+                    decrement.classList.toggle('opacity-60', isDisabled);
+                    decrement.classList.toggle('cursor-not-allowed', isDisabled);
+                };
+
+                const updateQuantity = (delta) => {
+                    if (!display || !input || !form) {
+                        return;
+                    }
+                    const current = Number(display.textContent) || 0;
+                    const next = Math.max(0, current + delta);
+                    if (next === current) {
+                        return;
+                    }
+                    display.textContent = next;
+                    input.value = next;
+                    adjustButtons(next);
+                    form.submit();
+                };
+
+                const initialQuantity = Number(display?.textContent) || 0;
+                adjustButtons(initialQuantity);
+
+                decrement?.addEventListener('click', () => updateQuantity(-1));
+                increment?.addEventListener('click', () => updateQuantity(1));
+            });
+        });
+    </script>
 </x-layouts.plain>
 
