@@ -2,15 +2,7 @@
     $product ??= null;
     $editing = isset($product);
     $imageUrl = $product?->image_url;
-    $cutTypeOptions = [
-        'sirloin' => __('Sirloin'),
-        'ribeye' => __('Ribeye'),
-        'tenderloin' => __('Tenderloin'),
-        'flank' => __('Flank'),
-        'chuck' => __('Chuck'),
-        'brisket' => __('Brisket'),
-        'hanger' => __('Hanger'),
-    ];
+    $cutTypes ??= collect();
 @endphp
 
 <div class="grid gap-6">
@@ -71,8 +63,8 @@
                 class="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-4 py-2 text-base text-zinc-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
             >
                 <option value="">{{ __('Pilih jenis potongan') }}</option>
-                @foreach($cutTypeOptions as $value => $label)
-                    <option value="{{ $value }}" @selected(old('cut_type', $product->cut_type ?? '') === $value)>{{ $label }}</option>
+                @foreach($cutTypes as $cut)
+                    <option value="{{ $cut->slug }}" @selected(old('cut_type', $product->cut_type ?? '') === $cut->slug)>{{ $cut->name }}</option>
                 @endforeach
             </select>
         </label>
