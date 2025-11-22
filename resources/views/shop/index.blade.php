@@ -49,23 +49,46 @@
         <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-0">
             
             {{-- Header/Hero Section (Disarankan untuk diubah total agar mirip Grocee, tapi ini versi sederhana) --}}
-            <header class="w-full rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
-                <div class="flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                        <p class="text-sm uppercase tracking-[0.2em] text-emerald-600 font-semibold">Juranan99</p>
-                        <h1 class="text-4xl font-extrabold text-gray-900 mt-1">{{ __('Fresh curated products') }}</h1>
-                        <p class="text-base text-gray-600 mt-2">{{ __('Browse the catalog, filter by type, and find the perfect cut.') }}</p>
-                    </div>
-                    <div class="space-y-1 text-right">
-                        @auth
-                            <p class="text-base font-semibold text-gray-800">{{ __('Hey, :name', ['name' => auth()->user()->name]) }}</p>
-                        @else
-                            <p class="text-base font-semibold text-gray-800">{{ __('Welcome back!') }}</p>
-                        @endauth
-                        <p class="text-sm uppercase tracking-widest text-emerald-600">{{ __('Keranjang') }} • **{{ $cartQuantity }}** {{ __('item') }}</p>
-                    </div>
-                </div>
-            </header>
+            <header class="w-full rounded-2xl overflow-hidden relative shadow-lg">
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10 rounded-2xl"></div> {{-- Overlay gradasi untuk teks --}}
+    
+    {{-- Gambar Daging/Produk --}}
+    <img 
+        src="https://media.istockphoto.com/id/1403665879/id/foto/potongan-daging-sapi-mentah-dan-shashlik-dengan-rempah-rempah.jpg?s=612x612&w=0&k=20&c=q7wOfGgU3f4m8JN7zSUD1dkpDyroATUJrl73aZBW_gE=" 
+        alt="Freshly curated meat products" 
+        class="w-full h-80 md:h-96 object-cover object-center rounded-2xl"
+    >
+
+    <div class="absolute inset-0 z-20 flex flex-col justify-center p-8 text-white rounded-2xl">
+        <div class="max-w-xl">
+            <p class="text-sm uppercase tracking-[0.2em] text-emerald-300 font-semibold">Juranan99</p>
+            <h1 class="text-5xl md:text-6xl font-extrabold mt-2 leading-tight">{{ __('Fresh curated products') }}</h1>
+            <p class="text-lg mt-3 max-w-md">{{ __('Browse our premium catalog, filter by type, and find the perfect cut for your culinary needs.') }}</p>
+            
+            {{-- Tombol atau informasi tambahan --}}
+            <div class="mt-6 flex items-center gap-4">
+                <a href="#products" class="rounded-full bg-emerald-600 px-7 py-3 text-base font-semibold text-white shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-700">
+                    {{ __('Lihat Produk Sekarang') }}
+                </a>
+                <a href="mailto:juranan99@example.com" class="text-white hover:text-emerald-300 transition flex items-center gap-2">
+                    <i class="fas fa-question-circle"></i> {{ __('Bantuan') }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- Info Keranjang di pojok, dipindahkan ke sini atau di Navigasi atas --}}
+    {{-- Saya pindahkan info keranjang ini ke dalam navigasi atau di dekatnya untuk design yang lebih bersih --}}
+    {{-- Tapi jika tetap ingin di header: --}}
+    <div class="absolute bottom-6 right-6 z-20 text-right text-white hidden md:block">
+        @auth
+            <p class="text-base font-semibold">{{ __('Hey, :name', ['name' => auth()->user()->name]) }}</p>
+        @else
+            <p class="text-base font-semibold">{{ __('Welcome back!') }}</p>
+        @endauth
+        
+    </div>
+</header>
 
             @if(session('success'))
                 {{-- Notifikasi Sukses --}}
@@ -135,16 +158,16 @@
                 </form>
             </section>
 
-            <div class="grid gap-6 lg:grid-cols-[3fr_1fr]" id="products">
+            <div class="grid gap-6 " id="products">
                 
                 {{-- Daftar Produk --}}
-                <div class="space-y-6">
+                <div class="">
                     <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-md">
-                        <div class="space-y-4">
+                        <div class="">
                             @if($products->isEmpty())
                                 <p class="text-sm text-gray-500">{{ __('Tidak ada hasil untuk filter ini. Coba kata kunci lain atau hapus filter.') }}</p>
                             @else
-                                <div class="grid gap-6 md:grid-cols-2">
+                                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                     @foreach($products as $product)
                                         {{-- Kartu Produk --}}
                                         <article class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 transition duration-300 hover:shadow-lg hover:border-emerald-300">
@@ -168,29 +191,61 @@
                                                 
                                                 <div class="flex items-center justify-between py-2 border-t border-gray-100 mt-2">
                                                     <span class="text-2xl font-bold text-emerald-600">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
-                                                    <span class="text-sm text-gray-500">{{ __('Stok') }}: **{{ number_format($product->stock) }}**</span>
+                                                    <span class="text-sm text-gray-500">{{ __('Stok') }}: {{ number_format($product->stock) }}</span>
                                                 </div>
 
-                                                <form action="{{ route('shop.cart.add') }}" method="POST" class="mt-3 flex w-full items-center gap-2">
-                                                    @csrf
-                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                    <label class="sr-only" for="quantity-{{ $product->id }}">{{ __('Jumlah') }}</label>
-                                                    <input
-                                                        id="quantity-{{ $product->id }}"
-                                                        name="quantity"
-                                                        type="number"
-                                                        min="1"
-                                                        value="1"
-                                                        {{-- Input kuantitas light design --}}
-                                                        class="w-20 rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-emerald-500 focus:ring-emerald-500 focus:outline-none text-center"
-                                                    >
-                                                    <button
-                                                        type="submit"
-                                                        class="flex-1 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-700 flex items-center justify-center gap-2"
-                                                    >
-                                                        <i class="fas fa-cart-plus"></i> {{ __('Tambah ke keranjang') }}
-                                                    </button>
-                                                </form>
+                                               <form action="{{ route('shop.cart.add') }}" method="POST" class="mt-3 flex w-full items-center gap-3" data-product-id="{{ $product->id }}">
+    @csrf
+    <input type="hidden" name="product_id" value="{{ $product->id }}">
+    
+    {{-- 1. Quantity Stepper Component --}}
+    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm h-10 w-32">
+        
+        {{-- Tombol MINUS --}}
+        <button
+            type="button"
+            class="quantity-minus flex-shrink-0 w-8 h-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition duration-150 text-xl font-bold border-r border-gray-300"
+            data-action="minus"
+            data-target="#quantity-input-{{ $product->id }}"
+        >
+            -
+        </button>
+
+        {{-- Display Kuantitas (Input yang akan di-submit) --}}
+        <input
+            id="quantity-input-{{ $product->id }}"
+            name="quantity"
+            type="number"
+            min="1"
+            value="1"
+            max="{{ $product->stock }}" {{-- Batasan maksimal stok --}}
+            readonly {{-- Tambahkan readonly agar hanya bisa diubah via tombol +/- --}}
+            class="flex-1 h-full text-center text-sm font-semibold text-gray-800 bg-white focus:outline-none focus:ring-0 focus:border-0 p-0 m-0 appearance-none"
+            style="-moz-appearance: textfield; appearance: textfield;" {{-- Menyembunyikan panah default di Firefox/Chrome --}}
+        >
+
+        {{-- Tombol PLUS --}}
+        <button
+            type="button"
+            class="quantity-plus flex-shrink-0 w-8 h-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition duration-150 text-xl font-bold border-l border-gray-300"
+            data-action="plus"
+            data-target="#quantity-input-{{ $product->id }}"
+        >
+            +
+        </button>
+    </div>
+
+    {{-- 2. Tombol Submit (Tambah ke Keranjang) --}}
+    <button
+        type="submit"
+        class="flex-1 h-10 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-emerald-500/30 transition hover:bg-emerald-700 flex items-center justify-center gap-2"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-check-fill" viewBox="0 0 16 16">
+            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-1.646-7.646-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L8 8.293l2.646-2.647a.5.5 0 0 1 .708.708"/>
+        </svg>
+        {{ __('Tambah ke keranjang') }}
+    </button>
+</form>
                                             </div>
                                         </article>
                                     @endforeach
@@ -206,55 +261,7 @@
                     </div>
                 </div>
 
-                {{-- Sidebar Keranjang --}}
-                <aside class="space-y-6">
-                    <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-md sticky top-20">
-                        <div class="flex items-center justify-between border-b border-gray-200 pb-3">
-                            <h3 class="text-xl font-bold text-gray-800"><i class="fas fa-shopping-cart mr-2 text-emerald-600"></i> {{ __('Keranjang saya') }}</h3>
-                            <span class="text-sm uppercase tracking-wide text-gray-500">{{ $cartQuantity }} {{ __('item') }}</span>
-                        </div>
-
-                        <div class="mt-4 space-y-3 max-h-96 overflow-y-auto pr-2">
-                            @forelse($cartItems as $item)
-                                {{-- Item Keranjang --}}
-                                <div class="rounded-lg border border-gray-200 bg-gray-50 p-3">
-                                    <div class="flex items-start justify-between gap-3">
-                                        <div class="flex-1">
-                                            <p class="text-sm font-semibold text-gray-900">{{ $item['product']->name }}</p>
-                                            <p class="text-xs tracking-wide text-gray-600 mt-0.5">Qty: **{{ $item['quantity'] }}**</p>
-                                            <p class="text-sm font-semibold text-emerald-600 mt-1">Rp{{ number_format($item['product']->price * $item['quantity'], 0, ',', '.') }}</p>
-                                        </div>
-                                        <form action="{{ route('shop.cart.remove', $item['product']) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            {{-- Tombol Hapus item --}}
-                                            <button type="submit" class="text-xs font-semibold uppercase tracking-wide text-rose-500 hover:text-rose-700 transition">
-                                                <i class="fas fa-times-circle"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="text-center py-6">
-                                    <i class="fas fa-box-open text-4xl text-gray-300"></i>
-                                    <p class="mt-3 text-sm text-gray-500">{{ __('Keranjang kosong. Tambahkan produk terlebih dahulu.') }}</p>
-                                </div>
-                            @endforelse
-                        </div>
-
-                        <div class="mt-6 border-t border-gray-200 pt-4 text-sm">
-                            <div class="flex items-center justify-between font-bold mb-3">
-                                <span class="text-base text-gray-800">{{ __('Total') }}</span>
-                                <span class="text-xl text-emerald-600">Rp{{ number_format($cartTotal, 0, ',', '.') }}</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mb-4">{{ __('Semua harga sudah termasuk pajak.') }}</p>
-                            {{-- Tombol Checkout/Lihat Keranjang --}}
-                            <a href="{{ route('home') }}#products" class="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-700">
-                                <i class="fas fa-credit-card mr-2"></i> {{ __('Lanjutkan ke Checkout') }}
-                            </a>
-                        </div>
-                    </div>
-                </aside>
+                
             </div>
         </div>
         
@@ -265,4 +272,31 @@
             </div>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-action="minus"], [data-action="plus"]').forEach(button => {
+                const target = button.getAttribute('data-target');
+                if (!target) {
+                    return;
+                }
+
+                const input = document.querySelector(target);
+                if (!input) {
+                    return;
+                }
+
+                button.addEventListener('click', () => {
+                    const min = Number(input.getAttribute('min')) || 1;
+                    const maxValue = input.getAttribute('max');
+                    const max = maxValue ? Number(maxValue) : Number.POSITIVE_INFINITY;
+                    const current = Number(input.value) || min;
+                    const delta = button.getAttribute('data-action') === 'plus' ? 1 : -1;
+                    const next = Math.max(min, Math.min(max, current + delta));
+
+                    input.value = next;
+                });
+            });
+        });
+    </script>
 </x-layouts.app>
