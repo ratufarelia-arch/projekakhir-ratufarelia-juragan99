@@ -86,10 +86,36 @@ class ShopController extends Controller
 
     public function showProducts(Request $request): View
     {
+        $search = $request->input('search');
+        $category = $request->input('category');
+        $cutType = $request->input('cut_type');
+
         $products = Product::query()
             ->where('is_active', true)
+            ->when($category, fn ($query) => $query->where('category', $category))
+            ->when($cutType, fn ($query) => $query->where('cut_type', $cutType))
+            ->when($search, fn ($query) => $query->where(function ($query) use ($search) {
+                $term = '%' . str_replace('%', '\\%', $search) . '%';
+                $query->where('name', 'like', $term)
+                    ->orWhere('description', 'like', $term);
+            }))
             ->orderByDesc('created_at')
-            ->paginate(18);
+            ->paginate(18)
+            ->withQueryString();
+
+        $categories = Product::query()
+            ->whereNotNull('category')
+            ->where('category', '<>', '')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
+
+        $cutTypes = Product::query()
+            ->whereNotNull('cut_type')
+            ->where('cut_type', '<>', '')
+            ->distinct()
+            ->orderBy('cut_type')
+            ->pluck('cut_type');
 
         $cartItems = $this->loadCartItems($request);
         $cartQuantity = $cartItems->sum('quantity');
@@ -103,12 +129,17 @@ class ShopController extends Controller
 
         return view('shop.products', compact(
             'products',
+            'categories',
+            'cutTypes',
             'cartItems',
             'cartQuantity',
             'cartTotal',
             'wishlistItems',
             'wishlistCount',
-            'wishlistIds'
+            'wishlistIds',
+            'category',
+            'cutType',
+            'search'
         ));
     }
 
