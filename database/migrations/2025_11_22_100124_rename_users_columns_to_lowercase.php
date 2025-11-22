@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        DB::statement('ALTER TABLE `users` CHANGE `NAME` `name` VARCHAR(255) NOT NULL');
+        DB::statement('ALTER TABLE `users` CHANGE `PASSWORD` `password` VARCHAR(255) NOT NULL');
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        DB::statement('ALTER TABLE `users` CHANGE `name` `NAME` VARCHAR(255) NOT NULL');
+        DB::statement('ALTER TABLE `users` CHANGE `password` `PASSWORD` VARCHAR(255) NOT NULL');
+    }
+};
