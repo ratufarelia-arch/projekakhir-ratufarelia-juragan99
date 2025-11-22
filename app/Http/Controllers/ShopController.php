@@ -62,6 +62,10 @@ class ShopController extends Controller
             return $carry + ($item['product']->price * $item['quantity']);
         }, 0);
 
+        $wishlistItems = $this->loadWishlistItems($request);
+        $wishlistCount = $wishlistItems->count();
+        $wishlistIds = $wishlistItems->pluck('id')->all();
+ 
         return view('shop.index', compact(
             'products',
             'categories',
@@ -69,12 +73,27 @@ class ShopController extends Controller
             'cartItems',
             'cartQuantity',
             'cartTotal',
+            'wishlistItems',
+            'wishlistCount',
+            'wishlistIds',
             'search',
             'category',
             'cutType',
             'minPrice',
             'maxPrice'
         ));
+    }
+
+
+    public function showCart(Request $request): View
+    {
+        $cartItems = $this->loadCartItems($request);
+        $cartQuantity = $cartItems->sum('quantity');
+        $cartTotal = $cartItems->reduce(function ($carry, $item) {
+            return $carry + ($item['product']->price * $item['quantity']);
+        }, 0);
+
+        return view('shop.cart', compact('cartItems', 'cartQuantity', 'cartTotal'));
     }
 
     public function addToCart(Request $request): RedirectResponse
@@ -118,31 +137,50 @@ class ShopController extends Controller
         }
 
         $request->session()->put('cart', $cart);
-
+ 
         return back()->with('success', __('Updated cart quantities.'));
     }
-
-    public function showCart(Request $request): View
+ 
+    public function addToWishlist(Request $request): RedirectResponse
     {
-        $cartItems = $this->loadCartItems($request);
+        $data = $request->validate([
+            'product_id' => ['required', 'exists:products,id'],
+        ]);
 
-        $cartQuantity = $cartItems->sum('quantity');
-        $cartTotal = $cartItems->reduce(function ($carry, $item) {
-            return $carry + ($item['product']->price * $item['quantity']);
-        }, 0);
+        $wishlist = $request->session()->get('wishlist', []);
+        $wishlist[$data['product_id']] = true;
+        $request->session()->put('wishlist', $wishlist);
 
-        return view('shop.cart', compact('cartItems', 'cartQuantity', 'cartTotal'));
+        return back()->with('success', __('Added to wishlist.'));
     }
 
+    public function removeFromWishlist(Request $request, Product $product): RedirectResponse
+    {
+        $wishlist = $request->session()->get('wishlist', []);
+        if (isset($wishlist[$product->id])) {
+            unset($wishlist[$product->id]);
+            $request->session()->put('wishlist', $wishlist);
+        }
+
+        return back()->with('success', __('Removed from wishlist.'));
+    }
+
+    public function showWishlist(Request $request): View
+    {
+        $wishlisted = $this->loadWishlistItems($request);
+
+        return view('shop.wishlist', ['wishlistItems' => $wishlisted]);
+    }
+ 
     private function loadCartItems(Request $request)
     {
         $cart = $request->session()->get('cart', []);
         $cartIds = array_keys($cart);
-
+ 
         if (empty($cartIds)) {
             return collect();
         }
-
+ 
         return Product::whereIn('id', $cartIds)
             ->get()
             ->map(function (Product $product) use ($cart) {
@@ -151,5 +189,19 @@ class ShopController extends Controller
                     'quantity' => $cart[$product->id] ?? 0,
                 ];
             });
+    }
+
+    private function loadWishlistItems(Request $request)
+    {
+        $wishlist = $request->session()->get('wishlist', []);
+        $ids = array_keys($wishlist);
+
+        if (empty($ids)) {
+            return collect();
+        }
+
+        return Product::whereIn('id', $ids)
+            ->orderByDesc('created_at')
+            ->get();
     }
 }
