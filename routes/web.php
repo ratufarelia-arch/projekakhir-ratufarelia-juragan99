@@ -2,15 +2,16 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminProductController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 
 Route::aliasMiddleware('role', \App\Http\Middleware\EnsureUserHasRole::class);
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [ShopController::class, 'index'])->name('home');
+Route::post('/cart/add', [ShopController::class, 'addToCart'])->name('shop.cart.add');
+Route::delete('/cart/{product}', [ShopController::class, 'removeFromCart'])->name('shop.cart.remove');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
