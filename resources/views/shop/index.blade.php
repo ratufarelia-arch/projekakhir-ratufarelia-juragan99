@@ -38,6 +38,18 @@
                             </span>
                         @endif
                     </a>
+                    <a
+                        href="{{ route('shop.wishlist.index') }}"
+                        class="relative transition hover:text-emerald-600"
+                        aria-label="{{ __('Lihat wishlist') }}"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1.314C5.562-.044 2.688.201 1.4 1.63c-1.062 1.162-.539 3.057 1.03 4.456L8 15l5.57-8.914c1.57-1.4 2.092-3.294 1.031-4.456C13.311.2 10.437-.043 8 1.314z"/>
+                        </svg>
+                        <span class="absolute -top-2 -right-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
+                            {{ $wishlistCount }}
+                        </span>
+                    </a>
                 </div>
                 {{-- Tombol Lihat Katalog/Aksi --}}
                 <a href="{{ route('home') }}#products" class="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-700">
@@ -246,6 +258,31 @@
         {{ __('Tambah ke keranjang') }}
     </button>
 </form>
+                                            @if(in_array($product->id, $wishlistIds ?? []))
+                                                <form action="{{ route('shop.wishlist.remove', $product) }}" method="POST" class="mt-2 flex w-full">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button
+                                                        type="submit"
+                                                        class="flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-red-600 transition hover:border-red-300"
+                                                    >
+                                                        <i class="fas fa-heart-broken text-sm"></i>
+                                                        {{ __('Hapus wishlist') }}
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('shop.wishlist.add') }}" method="POST" class="mt-2 flex w-full">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <button
+                                                        type="submit"
+                                                        class="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-emerald-600 transition hover:border-emerald-300"
+                                                    >
+                                                        <i class="fas fa-heart text-sm"></i>
+                                                        {{ __('Simpan wishlist') }}
+                                                    </button>
+                                                </form>
+                                            @endif
                                             </div>
                                         </article>
                                     @endforeach
