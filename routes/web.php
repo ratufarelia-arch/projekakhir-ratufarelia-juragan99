@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
     Route::get('/orders', [CustomerOrderController::class, 'index'])->name('shop.orders.index');
     Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])->name('shop.orders.show');
+    Route::post('/orders/{order}/reviews', [CustomerOrderController::class, 'storeReview'])->name('shop.orders.reviews.store');
 
     Volt::route('settings/profile', 'settings.profile')->name('profile.edit');
     Volt::route('settings/password', 'settings.password')->name('user-password.edit');
