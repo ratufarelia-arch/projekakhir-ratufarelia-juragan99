@@ -43,5 +43,20 @@
                 </div>
             @endif
         </section>
+
+        <section class="rounded-2xl border border-zinc-200 bg-white/80 p-6 shadow-sm shadow-zinc-900/5 dark:border-zinc-700 dark:bg-zinc-900">
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <p class="text-sm text-zinc-500">{{ __('Ekspor rekap penjualan sebagai Excel untuk keperluan pelaporan.') }}</p>
+                    <h2 class="text-xl font-semibold text-zinc-900 dark:text-white">{{ __('Laporan Penjualan') }}</h2>
+                </div>
+                <a
+                    href="{{ route('admin.reports.sales') }}"
+                    class="inline-flex items-center justify-center rounded-2xl border border-emerald-500 bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600"
+                >
+                    {{ __('Buka laporan') }}
+                </a>
+            </div>
+        </section>
     </div>
 </x-layouts.app>
