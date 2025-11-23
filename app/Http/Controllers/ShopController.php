@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cut;
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -54,6 +56,12 @@ class ShopController extends Controller
 
         $cutTypes = Cut::orderBy('name')->get();
 
+        $reviews = Review::with('user')
+            ->whereHas('order', fn ($query) => $query->where('status', Order::STATUS_COMPLETED))
+            ->latest()
+            ->take(12)
+            ->get();
+
         $cartItems = $this->loadCartItems($request);
         $cartQuantity = $cartItems->sum('quantity');
         $cartTotal = $cartItems->reduce(function ($carry, $item) {
@@ -66,6 +74,7 @@ class ShopController extends Controller
  
         return view('shop.index', compact(
             'products',
+            'reviews',
             'categories',
             'cutTypes',
             'cartItems',
