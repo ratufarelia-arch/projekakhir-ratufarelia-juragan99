@@ -4,6 +4,7 @@
 
 {{-- Asumsi menggunakan layout 'plain' atau 'app' yang ada --}}
 <x-layouts.plain :title="__('Home')">
+    <!-- animasi card bergerak dari kanan ke kiri efek marquee-->
     <style>
         .marquee-track {
             display: inline-flex;
@@ -39,7 +40,7 @@
         
         {{-- Logo/Nama Toko (Kiri) --}}
         <div class="flex items-center gap-4">
-            <span class="text-emerald-600 text-xl font-bold tracking-wide">Juranan99</span>
+            <span class="text-emerald-600 text-xl font-bold tracking-wide">Jurangan99</span>
         </div>
 
         {{-- Aksi Kanan (Keranjang, Wishlist, Pesanan, dan Lihat Katalog) --}}
@@ -84,6 +85,7 @@
                 @auth
                     <a href="{{ route('shop.orders.index') }}" class="text-sm font-semibold text-zinc-600 transition hover:text-emerald-600">{{ __('Pesanan saya') }}</a>
                 @endauth
+                <a href="{{ route('recipes.index') }}" class="text-sm font-semibold text-zinc-600 transition hover:text-emerald-600">{{ __('Resep') }}</a>
             </div>
 
             <span class="h-6 w-px bg-gray-200 hidden sm:block"></span>
@@ -111,7 +113,7 @@
 
     <div class="absolute inset-0 z-20 flex flex-col justify-center p-8 text-white rounded-2xl">
         <div class="max-w-xl">
-            <p class="text-sm uppercase tracking-[0.2em] text-emerald-300 font-semibold">Juranan99</p>
+            <p class="text-sm uppercase tracking-[0.2em] text-emerald-300 font-semibold">Jurangan99</p>
             <h1 class="text-5xl md:text-6xl font-extrabold mt-2 leading-tight">{{ __('Fresh curated products') }}</h1>
             <p class="text-lg mt-3 max-w-md">{{ __('Browse our premium catalog, filter by type, and find the perfect cut for your culinary needs.') }}</p>
             
@@ -120,7 +122,7 @@
                 <a href="product" class="rounded-full bg-emerald-600 px-7 py-3 text-base font-semibold text-white shadow-lg shadow-emerald-500/40 transition hover:bg-emerald-700">
                     {{ __('Lihat Produk Sekarang') }}
                 </a>
-                <a href="mailto:juranan99@example.com" class="text-white hover:text-emerald-300 transition flex items-center gap-2">
+                <a href="mailto:jurangan99@example.com" class="text-white hover:text-emerald-300 transition flex items-center gap-2">
                     <i class="fas fa-question-circle"></i> {{ __('Bantuan') }}
                 </a>
             </div>
@@ -150,7 +152,8 @@
                         <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">{{ __('Card carousel terus bergerak dari kanan ke kiri.') }}</p>
                     </div>
                     <div class="overflow-hidden">
-                        <div class="marquee-track">
+                        <!-- marquee-track di ambil dari style  -->
+                        <div class="marquee-track"> 
                             @foreach(range(1, 2) as $copy)
                                 @foreach($reviews as $review)
                                     <article class="review-card flex h-full flex-col gap-3 rounded-2xl border border-gray-100 bg-gradient-to-b from-white to-gray-50 p-4 shadow-sm shadow-emerald-200/40">
@@ -414,7 +417,7 @@
         {{-- Footer Sederhana --}}
         <footer class="mt-12 border-t border-gray-200 bg-white">
             <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-0 text-center text-sm text-gray-500">
-                &copy; {{ date('Y') }} Juranan99. {{ __('All rights reserved.') }}
+                &copy; {{ date('Y') }} Jurangan99. {{ __('All rights reserved.') }}
             </div>
         </footer>
     </div>
