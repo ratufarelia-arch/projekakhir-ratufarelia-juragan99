@@ -4,6 +4,31 @@
 
 {{-- Asumsi menggunakan layout 'plain' atau 'app' yang ada --}}
 <x-layouts.plain :title="__('Home')">
+    <style>
+        .marquee-track {
+            display: inline-flex;
+            gap: 1rem;
+            animation: marquee 24s linear infinite;
+            width: max-content;
+        }
+
+        .marquee-track-secondary {
+            animation-delay: -12s;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .review-card {
+            min-width: 280px;
+        }
+    </style>
     {{-- Mengganti bg-black dengan bg-gray-50 atau bg-white --}}
     <div class="min-h-screen bg-gray-50">
 
@@ -114,6 +139,62 @@
         
     </div>
 </header>
+
+            @if($reviews->isNotEmpty())
+                <section class="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
+                    <div class="mb-4 flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">{{ __('Ulasan pelanggan') }}</p>
+                            <h2 class="text-2xl font-semibold text-gray-900">{{ __('Rating kualitas daging') }}</h2>
+                        </div>
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">{{ __('Card carousel terus bergerak dari kanan ke kiri.') }}</p>
+                    </div>
+                    <div class="overflow-hidden">
+                        <div class="marquee-track">
+                            @foreach(range(1, 2) as $copy)
+                                @foreach($reviews as $review)
+                                    <article class="review-card flex h-full flex-col gap-3 rounded-2xl border border-gray-100 bg-gradient-to-b from-white to-gray-50 p-4 shadow-sm shadow-emerald-200/40">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-sm font-semibold text-gray-900">{{ $review->user->name ?? __('Pembeli') }}</p>
+                                                <p class="text-xs text-gray-500">{{ $review->created_at->format('d F Y') }}</p>
+                                            </div>
+                                            <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">{{ $review->rating }}/5</span>
+                                        </div>
+                                        <div class="flex gap-0.5 text-sm">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <span class="{{ $i <= $review->rating ? 'text-amber-500' : 'text-gray-300' }}">★</span>
+                                            @endfor
+                                        </div>
+                                        <p class="text-sm text-gray-600">{{ Str::limit($review->comment, 150) }}</p>
+                                    </article>
+                                @endforeach
+                            @endforeach
+                        </div>
+                        <div class="mt-4 marquee-track marquee-track-secondary" aria-hidden="true">
+                            @foreach(range(1, 2) as $copy)
+                                @foreach($reviews as $review)
+                                    <article class="review-card flex h-full flex-col gap-3 rounded-2xl border border-gray-100 bg-gradient-to-b from-white to-gray-50 p-4 shadow-sm shadow-emerald-200/40">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-sm font-semibold text-gray-900">{{ $review->user->name ?? __('Pembeli') }}</p>
+                                                <p class="text-xs text-gray-500">{{ $review->created_at->format('d F Y') }}</p>
+                                            </div>
+                                            <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">{{ $review->rating }}/5</span>
+                                        </div>
+                                        <div class="flex gap-0.5 text-sm">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <span class="{{ $i <= $review->rating ? 'text-amber-500' : 'text-gray-300' }}">★</span>
+                                            @endfor
+                                        </div>
+                                        <p class="text-sm text-gray-600">{{ Str::limit($review->comment, 150) }}</p>
+                                    </article>
+                                @endforeach
+                            @endforeach
+                        </div>
+                    </div>
+                </section>
+            @endif
 
             @if(session('success'))
                 {{-- Notifikasi Sukses --}}
