@@ -7,9 +7,11 @@ use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Http\Controllers\Concerns\InteractsWithCart;
 
 class ShopController extends Controller
 {
+    use InteractsWithCart;
     public function index(Request $request): View
     {
         $search = $request->input('search');
@@ -221,36 +223,5 @@ class ShopController extends Controller
         return view('shop.wishlist', ['wishlistItems' => $wishlisted]);
     }
  
-    private function loadCartItems(Request $request)
-    {
-        $cart = $request->session()->get('cart', []);
-        $cartIds = array_keys($cart);
- 
-        if (empty($cartIds)) {
-            return collect();
-        }
- 
-        return Product::whereIn('id', $cartIds)
-            ->get()
-            ->map(function (Product $product) use ($cart) {
-                return [
-                    'product' => $product,
-                    'quantity' => $cart[$product->id] ?? 0,
-                ];
-            });
-    }
-
-    private function loadWishlistItems(Request $request)
-    {
-        $wishlist = $request->session()->get('wishlist', []);
-        $ids = array_keys($wishlist);
-
-        if (empty($ids)) {
-            return collect();
-        }
-
-        return Product::whereIn('id', $ids)
-            ->orderByDesc('created_at')
-            ->get();
-    }
 }
+
