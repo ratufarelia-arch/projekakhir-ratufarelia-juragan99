@@ -69,7 +69,7 @@
 
         <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-0">
             {{-- Header/Jumbotron (Sama seperti sebelumnya) --}}
-            <header class="relative overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-r from-zinc-600 to-zinc-300 p-6 shadow-lg shadow-emerald-100/50">
+            <header class="relative overflow-hidden rounded-3xl border border-emerald-100 bg-black p-6 shadow-lg shadow-emerald-100/50">
                 <img
                     src="https://images.unsplash.com/photo-1690983322025-aab4f95a0269?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZGFnaW5nJTIwc2FwaXxlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000"
                     alt="Groceries spread"
