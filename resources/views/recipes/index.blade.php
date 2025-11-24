@@ -41,7 +41,7 @@
                         <div class="mt-10 flex flex-wrap items-center gap-y-4 gap-x-6">
                             <a
                                 href="{{ $featured->product_link ?? route('shop.products.index') }}"
-                                class="rounded-full bg-emerald-600 px-8 py-3.5 text-base font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 transition"
+                                class="rounded-full bg-emerald-600 px-8 py-3.5 text-base font-semibold text-white shadow-sm hover:bg-emerald-500  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 transition"
                             >
                                 {{ $featured->product_link_text ?? __('Lihat Bahan Utamanya') }}
                             </a>
