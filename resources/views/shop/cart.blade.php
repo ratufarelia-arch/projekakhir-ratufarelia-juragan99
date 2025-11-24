@@ -9,17 +9,69 @@
         
         {{-- Logo/Nama Toko (Kiri) --}}
         <div class="flex items-center gap-4">
-            {{-- Menggunakan style logo yang sama dengan Home/Wishlist --}}
-            <span class="text-emerald-600 text-xl font-bold tracking-wide">Juranan99</span>
+            <span class="text-emerald-600 text-xl font-bold tracking-wide">Jurangan99</span>
         </div>
 
-        {{-- Blok Tautan Navigasi (Dihilangkan, hanya menyisakan tombol Lihat Katalog) --}}
-        
-        {{-- Tombol Lihat Katalog/Aksi (Kanan) --}}
-        <div class="flex items-center gap-3">
-            <a href="{{ route('home') }}#products" class="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-700">
-                <i class="fas fa-shopping-basket mr-2"></i> {{ __('Lihat katalog') }}
-            </a>
+        {{-- Aksi Kanan (Keranjang, Wishlist, Pesanan, dan Login/Logout) --}}
+        <div class="flex flex-1 items-center justify-end gap-4">
+            <div class="flex items-center gap-4">
+                {{-- 1. Tautan Keranjang (Ikon) --}}
+                <a
+                    href="{{ route('shop.cart.index') }}"
+                    class="relative text-gray-700 transition hover:text-emerald-600"
+                    aria-label="{{ __('Lihat keranjang') }}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart-check-fill" viewBox="0 0 16 16">
+                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-1.646-7.646-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L8 8.293l2.646-2.647a.5.5 0 0 1 .708.708"/>
+                    </svg>
+
+                    {{-- Badge Kuantitas Keranjang --}}
+                    @if(isset($cartQuantity) && $cartQuantity > 0)
+                        <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-semibold text-white">
+                            {{ $cartQuantity > 99 ? '99+' : $cartQuantity }}
+                        </span>
+                    @endif
+                </a>
+
+                {{-- 2. Tautan Wishlist (Ikon) --}}
+                <a
+                    href="{{ route('shop.wishlist.index') }}"
+                    class="relative text-gray-700 transition hover:text-emerald-600"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                    </svg>
+
+                    {{-- Badge Kuantitas Wishlist --}}
+                    @if(isset($wishlistCount) && $wishlistCount > 0)
+                        <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-semibold text-white">
+                            {{ $wishlistCount > 99 ? '99+' : $wishlistCount }}
+                        </span>
+                    @endif
+                </a>
+
+                {{-- 3. Tautan Pesanan Saya --}}
+                @auth
+                    <a href="{{ route('shop.orders.index') }}" class="text-sm font-semibold text-zinc-600 transition hover:text-emerald-600">{{ __('Pesanan saya') }}</a>
+                @endauth
+                <a href="{{ route('recipes.index') }}" class="text-sm font-semibold text-zinc-600 transition hover:text-emerald-600">{{ __('Resep') }}</a>
+            </div>
+
+            <span class="h-6 w-px bg-gray-200 hidden sm:block"></span>
+
+            {{-- 4. Tombol Aksi Login/Logout --}}
+            @guest
+                <a href="{{ route('login') }}" class="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-700 inline-flex items-center justify-center gap-2">
+                    <i class="fas fa-right-to-bracket"></i> {{ __('Login') }}
+                </a>
+            @else
+                <form method="POST" action="{{ route('logout') }}" class="m-0">
+                    @csrf
+                    <button type="submit" class="w-full rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-700 inline-flex items-center justify-center gap-2">
+                        <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
+                    </button>
+                </form>
+            @endguest
         </div>
     </div>
 </nav>
