@@ -153,7 +153,18 @@ class ShopController extends Controller
             return $carry + ($item['product']->price * $item['quantity']);
         }, 0);
 
-        return view('shop.cart', compact('cartItems', 'cartQuantity', 'cartTotal'));
+        $wishlistItems = $this->loadWishlistItems($request);
+        $wishlistCount = $wishlistItems->count();
+        $wishlistIds = $wishlistItems->pluck('id')->all();
+
+        return view('shop.cart', compact(
+            'cartItems',
+            'cartQuantity',
+            'cartTotal',
+            'wishlistItems',
+            'wishlistCount',
+            'wishlistIds'
+        ));
     }
 
     public function addToCart(Request $request): RedirectResponse
@@ -227,9 +238,24 @@ class ShopController extends Controller
 
     public function showWishlist(Request $request): View
     {
-        $wishlisted = $this->loadWishlistItems($request);
+        $cartItems = $this->loadCartItems($request);
+        $cartQuantity = $cartItems->sum('quantity');
+        $cartTotal = $cartItems->reduce(function ($carry, $item) {
+            return $carry + ($item['product']->price * $item['quantity']);
+        }, 0);
 
-        return view('shop.wishlist', ['wishlistItems' => $wishlisted]);
+        $wishlistItems = $this->loadWishlistItems($request);
+        $wishlistCount = $wishlistItems->count();
+        $wishlistIds = $wishlistItems->pluck('id')->all();
+
+        return view('shop.wishlist', compact(
+            'cartItems',
+            'cartQuantity',
+            'cartTotal',
+            'wishlistItems',
+            'wishlistCount',
+            'wishlistIds'
+        ));
     }
  
 }
