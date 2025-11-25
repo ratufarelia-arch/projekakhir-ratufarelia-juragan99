@@ -13,48 +13,7 @@
     <div class="min-h-screen bg-white text-zinc-900 font-sans">
 
         {{-- ================= NAVBAR (KONSISTEN DENGAN CART) ================= --}}
-        <nav class="sticky top-0 z-30 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 transition-all duration-300">
-            <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-0">
-                
-                {{-- Logo --}}
-                <div class="flex items-center gap-4">
-                    <span class="text-emerald-600 text-xl font-bold tracking-wide">Juragan<span class="text-zinc-900">99</span></span>
-                </div>
-
-                {{-- Aksi Kanan --}}
-                <div class="flex flex-1 items-center justify-end gap-6">
-                    <div class="flex items-center gap-5">
-                        <a href="{{ route('shop.cart.index') }}" class="group relative text-gray-500 transition hover:text-emerald-600" aria-label="Keranjang">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg>
-                            @if(isset($cartQuantity) && $cartQuantity > 0)
-                                <span class="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">{{ $cartQuantity > 99 ? '99+' : $cartQuantity }}</span>
-                            @endif
-                        </a>
-                        <a href="{{ route('shop.wishlist.index') }}" class="relative text-gray-500 transition hover:text-emerald-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/></svg>
-                        </a>
-                        @auth
-                            <a href="{{ route('shop.orders.index') }}" class="text-sm font-semibold text-zinc-500 transition hover:text-emerald-600">{{ __('Pesanan') }}</a>
-                        @endauth
-                        {{-- Menu Aktif --}}
-                        <a href="{{ route('recipes.index') }}" class="text-sm font-bold text-emerald-600">{{ __('Resep') }}</a>
-                    </div>
-
-                    <span class="h-5 w-px bg-gray-200 hidden sm:block"></span>
-
-                    @guest
-                        <a href="{{ route('login') }}" class="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-emerald-500/20 transition hover:bg-emerald-700 hover:shadow-lg">
-                            {{ __('Login') }}
-                        </a>
-                    @else
-                        <form method="POST" action="{{ route('logout') }}" class="m-0">
-                            @csrf
-                            <button type="submit" class="text-sm font-semibold text-zinc-500 hover:text-rose-600 transition">{{ __('Logout') }}</button>
-                        </form>
-                    @endguest
-                </div>
-            </div>
-        </nav>
+        @include('partials.navbar')
 
         {{-- ================= HERO SECTION (FEATURED) ================= --}}
         @if($featured)
