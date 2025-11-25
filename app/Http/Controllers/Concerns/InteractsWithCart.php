@@ -11,40 +11,39 @@ trait InteractsWithCart
     protected function loadCartItems(Request $request): Collection
     {
         $cart = $request->session()->get('cart', []);
-        $cartIds = array_keys($cart);
 
-        if (empty($cartIds)) {
+        if (empty($cart)) {
             return collect();
         }
 
-        return Product::whereIn('id', $cartIds)
+        $products = Product::whereIn('id', collect($cart)
+                ->pluck('product_id')
+                ->filter()
+                ->unique()
+                ->all()
+            )
             ->get()
-            ->map(function (Product $product) use ($cart) {
-                $entry = $this->normalizeCartEntry($product, $cart[$product->id] ?? null);
+            ->keyBy('id');
 
-                $entry['product'] = $product;
+        return collect($cart)
+            ->map(function (array $entry, string $entryKey) use ($products) {
+                $product = $products->get($entry['product_id'] ?? null);
 
-                return $entry;
-            });
-    }
+                if (! $product) {
+                    return null;
+                }
 
-    protected function normalizeCartEntry(Product $product, array|int|null $entry): array
-    {
-        if (! is_array($entry)) {
-            return [
-                'quantity' => max(0, (int) $entry),
-                'unit_price' => $product->price,
-                'weight_in_kg' => $product->weight ?? 0,
-                'weight_label' => $this->formatWeightLabel($product->weight ?? 0),
-            ];
-        }
-
-        return [
-            'quantity' => max(0, (int) ($entry['quantity'] ?? 0)),
-            'unit_price' => isset($entry['unit_price']) ? (float) $entry['unit_price'] : $product->price,
-            'weight_in_kg' => isset($entry['weight_in_kg']) ? (float) $entry['weight_in_kg'] : ($product->weight ?? 0),
-            'weight_label' => $entry['weight_label'] ?? $this->formatWeightLabel($product->weight ?? 0),
-        ];
+                return [
+                    'entry_key' => $entryKey,
+                    'product' => $product,
+                    'quantity' => max(0, (int) ($entry['quantity'] ?? 0)),
+                    'unit_price' => isset($entry['unit_price']) ? (float) $entry['unit_price'] : $product->price,
+                    'weight_in_kg' => isset($entry['weight_in_kg']) ? (float) $entry['weight_in_kg'] : ($product->weight ?? 0),
+                    'weight_label' => $entry['weight_label'] ?? $this->formatWeightLabel($product->weight ?? 0),
+                ];
+            })
+            ->filter()
+            ->values();
     }
 
     protected function loadWishlistItems(Request $request): Collection
