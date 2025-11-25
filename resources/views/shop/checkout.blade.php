@@ -126,7 +126,7 @@
                                 </div>
                                 <div class="mt-4 rounded-2xl bg-white p-4 text-center shadow-inner shadow-emerald-100">
                                     <p class="text-[10px] uppercase tracking-[0.5em] text-zinc-400">{{ __('Kode QRIS') }}</p>
-                                    <p class="mt-1 text-2xl font-bold text-emerald-700">0123 4567 8901 2345</p>
+                                    <img src="{{ asset('qris.jpg') }}" alt="QRIS" class="h-60 w-full rounded-full object-cover object-center">
                                     <p class="text-xs text-zinc-500">{{ __('A/N: Jurangan 99 · Bank QRIS') }}</p>
                                 </div>
                                 <p class="mt-3 text-xs text-zinc-600">{{ __('Setelah menyelesaikan transfer, unggah satu bukti untuk setiap produk agar konfirmasi bisa berjalan tanpa hambatan.') }}</p>
