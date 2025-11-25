@@ -307,13 +307,15 @@
                                 <article class="group flex flex-col rounded-[1.5rem] border border-zinc-200 bg-white p-6 shadow-lg transition hover:border-emerald-300 hover:shadow-emerald-100" data-product-card>
                                     <div class="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-zinc-100">
                                         @if($product->image_url)
-                                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                                            <a href="{{ route('shop.products.show', $product) }}" class="absolute inset-0 block">
+                                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                                            </a>
                                         @else
                                             <div class="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.4em] text-zinc-400">
                                                 {{ __('No Image') }}
                                             </div>
                                         @endif
-                                        <form action="{{ in_array($product->id, $wishlistIds ?? []) ? route('shop.wishlist.remove', $product) : route('shop.wishlist.add') }}" method="POST" class="absolute right-4 top-4">
+                                        <form action="{{ in_array($product->id, $wishlistIds ?? []) ? route('shop.wishlist.remove', $product) : route('shop.wishlist.add') }}" method="POST" class="absolute right-4 top-4 z-10">
                                             @csrf
                                             @if(in_array($product->id, $wishlistIds ?? []))
                                                 @method('DELETE')
