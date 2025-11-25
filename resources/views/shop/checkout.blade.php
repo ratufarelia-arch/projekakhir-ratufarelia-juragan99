@@ -33,7 +33,7 @@
             @endif
 
             {{-- Form Wrapper starts here covering both columns --}}
-            <form action="{{ route('shop.checkout.store') }}" method="POST">
+            <form action="{{ route('shop.checkout.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 
                 <div class="grid gap-8 lg:grid-cols-12">
@@ -116,6 +116,22 @@
                     <div class="lg:col-span-5 xl:col-span-4">
                         <div class="sticky top-8 space-y-6">
                             
+                            <div class="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-6 shadow-sm">
+                                <div class="flex items-center gap-3">
+                                    <span class="rounded-full bg-emerald-600/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">QRIS</span>
+                                    <div>
+                                        <p class="text-sm font-semibold text-emerald-900">{{ __('Pembayaran QRIS') }}</p>
+                                        <p class="text-xs text-emerald-700/70">{{ __('Gunakan aplikasi banking/mPay yang sudah Anda punya untuk melakukan scan.') }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 rounded-2xl bg-white p-4 text-center shadow-inner shadow-emerald-100">
+                                    <p class="text-[10px] uppercase tracking-[0.5em] text-zinc-400">{{ __('Kode QRIS') }}</p>
+                                    <p class="mt-1 text-2xl font-bold text-emerald-700">0123 4567 8901 2345</p>
+                                    <p class="text-xs text-zinc-500">{{ __('A/N: Jurangan 99 · Bank QRIS') }}</p>
+                                </div>
+                                <p class="mt-3 text-xs text-zinc-600">{{ __('Setelah menyelesaikan transfer, unggah satu bukti untuk setiap produk agar konfirmasi bisa berjalan tanpa hambatan.') }}</p>
+                            </div>
+
                             <div class="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm ring-4 ring-zinc-50">
                                 <h3 class="mb-4 font-bold text-zinc-900">{{ __('Ringkasan Pesanan') }}</h3>
                                 
@@ -146,6 +162,19 @@
                                                     Rp{{ number_format($item['unit_price'] * $item['quantity'], 0, ',', '.') }}
                                                 </p>
                                             </div>
+                                        </div>
+                                        <div class="mt-2 flex flex-col gap-2 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 px-3 py-2 sm:px-4 sm:py-3">
+                                            <label class="text-[11px] font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Upload bukti pembayaran :product', ['product' => $item['product']->name]) }}</label>
+                                            <input
+                                                type="file"
+                                                name="payment_proof[{{ $item['product']->id }}]"
+                                                accept="image/png,image/jpeg,image/jpg,application/pdf"
+                                                class="text-xs text-zinc-500"
+                                            >
+                                            <p class="text-[11px] text-zinc-400">{{ __('PNG, JPG, atau PDF maksimal 2MB per produk.') }}</p>
+                                            @error('payment_proof.' . $item['product']->id)
+                                                <p class="text-xs text-rose-500">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     @endforeach
                                 </div>
