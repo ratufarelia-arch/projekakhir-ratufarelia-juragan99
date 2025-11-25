@@ -120,26 +120,29 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-none flex-col gap-3 text-sm text-zinc-500">
-                                        <div class="flex items-center gap-2" data-quantity-control>
-                                            <button type="button" data-action="decrement" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">-</button>
-                                            <span class="text-base font-semibold text-zinc-900" data-quantity-display>{{ $item['quantity'] }}</span>
-                                            <button type="button" data-action="increment" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">+</button>
-                                            <form action="{{ route('shop.cart.update', $item['product']) }}" method="POST" class="sr-only" data-quantity-form>
-                                                @csrf
-                                                @method('PATCH')
-                                                <input type="hidden" name="quantity" value="{{ $item['quantity'] }}">
-                                            </form>
-                                            <form method="POST" action="{{ route('shop.cart.remove', $item['product']) }}" class="ml-auto">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-xs font-semibold uppercase tracking-[0.4em] text-rose-500">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
+                                            <div class="flex items-center gap-2" data-quantity-control>
+                                                <button type="button" data-action="decrement" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">-</button>
+                                                <span class="text-base font-semibold text-zinc-900" data-quantity-display>{{ $item['quantity'] }}</span>
+                                                <button type="button" data-action="increment" class="rounded-full border border-zinc-200 px-2 text-xs font-semibold text-zinc-600 transition hover:border-emerald-400">+</button>
+                                                <form action="{{ route('shop.cart.update', $item['product']) }}" method="POST" class="sr-only" data-quantity-form>
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="entry_key" value="{{ $item['entry_key'] }}">
+                                                    <input type="hidden" name="quantity" value="{{ $item['quantity'] }}">
+                                                </form>
+                                                <form method="POST" action="{{ route('shop.cart.remove', $item['product']) }}" class="ml-auto">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="entry_key" value="{{ $item['entry_key'] }}">
+                                                    <button type="submit" class="text-xs font-semibold uppercase tracking-[0.4em] text-rose-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            </div>
+
                                     </div>
                                 </article>
                             @endforeach
