@@ -9,7 +9,7 @@
 <x-layouts.plain :title="__('Kontak Kami')">
     <div class="min-h-screen bg-white text-zinc-900 font-sans selection:bg-emerald-100 selection:text-emerald-900">
         
-        {{-- Navbar Placeholder (Asumsi sudah include di layout, tapi layout ini butuh spacing atas) --}}
+        @include('partials.navbar')
         
         <main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
             
