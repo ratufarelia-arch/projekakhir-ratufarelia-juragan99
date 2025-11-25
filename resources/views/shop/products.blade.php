@@ -9,65 +9,11 @@
     <div x-data="{ sidebarOpen: false }" class="min-h-screen bg-gradient-to-b from-[#f6f7f2] via-[#fbfdf9] to-[#f3f7ed] text-zinc-900">
         {{-- Navbar Tetap (Sama seperti sebelumnya) --}}
        {{-- Asumsi Anda memiliki variabel $cartQuantity dan $wishlistCount di view atau layout --}}
-
-<nav class="sticky top-0 z-30 border-b border-zinc-200/60 bg-white/90 backdrop-blur">
-    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        
-        {{-- 1. Logo/Branding di Kiri --}}
-        <div class="flex items-center gap-6">
-            <a href="{{ route('home') }}" class="text-xl font-extrabold text-zinc-900 tracking-tight">
-                {{-- Mengganti text uppercase kecil menjadi logo yang lebih jelas --}}
-                <span class="text-emerald-600">Jurangan</span> 99
-            </a>
-            
-            {{-- Navigasi Utama (Dibuat lebih ringkas, muncul di desktop) --}}
-            <div class="hidden items-center gap-6 text-sm font-semibold text-zinc-600 md:flex">
-                <a href="{{ route('shop.products.index') }}" class="transition hover:text-emerald-600 {{ Request::routeIs('shop.products.index') ? 'text-emerald-600' : '' }}">{{ __('Product') }}</a>
-                <a href="{{ route('home') }}" class="transition hover:text-emerald-600">{{ __('Home') }}</a>
-                {{-- Anda bisa tambahkan link lain di sini --}}
-            </div>
-        </div>
-
-        {{-- 2. Aksi dan Ikon di Kanan (Lebih Fokus) --}}
-        <div class="flex items-center gap-4">
-            
-            {{-- Ikon Wishlist (Hanya tampil ikon, lebih clean) --}}
-            <a href="{{ route('shop.wishlist.index') }}" class="relative text-zinc-500 transition hover:text-rose-500">
-                {{-- Ikon Hati --}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                </svg>
-                @if(($wishlistCount ?? 0) > 0)
-                <span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white leading-none">
-                    {{ $wishlistCount }}
-                </span>
-                @endif
-            </a>
-            
-            {{-- Ikon Keranjang (Hanya tampil ikon, lebih clean) --}}
-            <a href="{{ route('shop.cart.index') }}" class="relative text-zinc-500 transition hover:text-emerald-600">
-                {{-- Ikon Keranjang --}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
-                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
-                </svg>
-                @if(($cartQuantity ?? 0) > 0)
-                <span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white leading-none">
-                    {{ $cartQuantity }}
-                </span>
-                @endif
-            </a>
-
-            {{-- Tombol Aksi Utama --}}
-            <a href="{{ route('home') }}#products" class="rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-emerald-500 hidden sm:block">
-                {{ __('Lihat katalog') }}
-            </a>
-
-           
-        </div>
-    </div>
-</nav>
-
+ 
+        @include('partials.navbar')
+ 
         <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-0">
+
             {{-- Header/Jumbotron (Sama seperti sebelumnya) --}}
             <header class="relative overflow-hidden rounded-3xl border border-emerald-100 bg-black p-6 shadow-lg shadow-emerald-100/50">
                 <img
