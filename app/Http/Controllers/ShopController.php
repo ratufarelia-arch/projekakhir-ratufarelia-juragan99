@@ -155,11 +155,11 @@ class ShopController extends Controller
             $unitPrice = $item['unit_price'] ?? $item['product']->price;
             return $carry + ($unitPrice * $item['quantity']);
         }, 0);
-
+ 
         $wishlistItems = $this->loadWishlistItems($request);
         $wishlistCount = $wishlistItems->count();
         $wishlistIds = $wishlistItems->pluck('id')->all();
-
+ 
         return view('shop.cart', compact(
             'cartItems',
             'cartQuantity',
@@ -169,7 +169,7 @@ class ShopController extends Controller
             'wishlistIds'
         ));
     }
-
+ 
     public function addToCart(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -179,76 +179,88 @@ class ShopController extends Controller
             'selected_weight' => ['nullable', 'numeric', 'min:0'],
             'selected_weight_label' => ['nullable', 'string', 'max:255'],
         ]);
-
+ 
         $product = Product::findOrFail($data['product_id']);
         $quantity = $data['quantity'] ?? 1;
         $cart = $request->session()->get('cart', []);
-
-        $existingEntry = $this->normalizeCartEntry($product, $cart[$product->id] ?? null);
-        $existingQuantity = $existingEntry['quantity'] ?? 0;
-
+ 
         $unitPrice = isset($data['unit_price']) && $data['unit_price'] > 0 ? (float) $data['unit_price'] : (float) $product->price;
-        $weight = (float) ($data['selected_weight'] ?? ($existingEntry['weight_in_kg'] ?? $product->weight ?? 0));
-
+        $weight = (float) ($data['selected_weight'] ?? ($product->weight ?? 0));
         if ($weight <= 0) {
             $weight = $product->weight ?? 0;
         }
-
-        $label = trim((string) ($data['selected_weight_label'] ?? $existingEntry['weight_label']));
-
-        if ($label === '') {
-            $label = $this->formatWeightLabel($weight ?: ($product->weight ?? 0));
-        }
-
-        $cart[$product->id] = [
+ 
+        $label = trim((string) ($data['selected_weight_label'] ?? $this->formatWeightLabel($weight ?: ($product->weight ?? 0))));
+        $label = $label === '' ? $this->formatWeightLabel($weight ?: ($product->weight ?? 0)) : $label;
+ 
+        $entryKey = $this->generateCartEntryKey($product, $label, $unitPrice);
+        $existingQuantity = isset($cart[$entryKey]) ? (int) ($cart[$entryKey]['quantity'] ?? 0) : 0;
+ 
+        $cart[$entryKey] = [
+            'product_id' => $product->id,
             'quantity' => $existingQuantity + $quantity,
             'unit_price' => round($unitPrice, 2),
             'weight_in_kg' => $weight,
             'weight_label' => $label,
         ];
-
+ 
         $request->session()->put('cart', $cart);
-
+ 
         return back()->with('success', __('Product added to cart.'));
     }
-
+ 
     public function removeFromCart(Request $request, Product $product): RedirectResponse
     {
+        $data = $request->validate([
+            'entry_key' => ['required', 'string'],
+        ]);
+ 
         $cart = $request->session()->get('cart', []);
-        if (isset($cart[$product->id])) {
-            unset($cart[$product->id]);
+        $entryKey = $data['entry_key'];
+ 
+        if (isset($cart[$entryKey])) {
+            unset($cart[$entryKey]);
             $request->session()->put('cart', $cart);
         }
-
+ 
         return back()->with('success', __('Removed from cart.'));
     }
-
+ 
     public function updateCart(Request $request, Product $product): RedirectResponse
     {
         $data = $request->validate([
             'quantity' => ['required', 'integer', 'min:0'],
+            'entry_key' => ['required', 'string'],
         ]);
-
-        $cart = $request->session()->get('cart', []);
-        $existingEntry = $this->normalizeCartEntry($product, $cart[$product->id] ?? null);
-
-        if ($data['quantity'] <= 0) {
-            unset($cart[$product->id]);
-        } else {
-            $cart[$product->id] = [
-                'quantity' => $data['quantity'],
-                'unit_price' => $existingEntry['unit_price'],
-                'weight_in_kg' => $existingEntry['weight_in_kg'],
-                'weight_label' => $existingEntry['weight_label'],
-            ];
-        }
-
-        $request->session()->put('cart', $cart);
  
+        $cart = $request->session()->get('cart', []);
+        $entryKey = $data['entry_key'];
+ 
+        if (! isset($cart[$entryKey])) {
+            return back()->with('success', __('Updated cart quantities.'));
+        }
+ 
+        if ($data['quantity'] <= 0) {
+            unset($cart[$entryKey]);
+        } else {
+            $cart[$entryKey]['quantity'] = $data['quantity'];
+        }
+ 
+        $request->session()->put('cart', $cart);
+  
         return back()->with('success', __('Updated cart quantities.'));
     }
  
+    protected function generateCartEntryKey(Product $product, string $weightLabel, float $unitPrice): string
+    {
+        $normalizedLabel = trim(strtolower($weightLabel));
+        $normalizedPrice = number_format($unitPrice, 2, '.', '');
+ 
+        return sha1("{$product->id}|{$normalizedLabel}|{$normalizedPrice}");
+    }
+ 
     public function addToWishlist(Request $request): RedirectResponse
+
     {
         $data = $request->validate([
             'product_id' => ['required', 'exists:products,id'],
