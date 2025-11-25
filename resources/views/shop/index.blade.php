@@ -370,7 +370,6 @@
                                     >
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="quantity" value="1" id="quantity-input-home-{{ $product->id }}">
                                         <input type="hidden" name="unit_price" value="{{ number_format($product->price, 2, '.', '') }}">
                                         <input type="hidden" name="selected_weight" value="{{ $baseWeightValue }}">
                                         <input type="hidden" name="selected_weight_label" value="{{ $weightLabel }}">
@@ -520,6 +519,120 @@
 
                     input.value = next;
                 });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currencyFormatter = new Intl.NumberFormat('id-ID', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            });
+
+            document.querySelectorAll('[data-product-variant-form]').forEach((form) => {
+                const card = form.closest('[data-product-card]');
+                const priceDisplay = card?.querySelector('[data-price-display]');
+                const weightDisplay = card?.querySelector('[data-selected-weight-label]');
+                const variantSelect = form.querySelector('[data-variant-select]');
+                const customInput = form.querySelector('[data-custom-weight]');
+                const hiddenUnitPrice = form.querySelector('input[name="unit_price"]');
+                const hiddenWeight = form.querySelector('input[name="selected_weight"]');
+                const hiddenWeightLabel = form.querySelector('input[name="selected_weight_label"]');
+                const basePrice = Number(form.dataset.basePrice) || 0;
+                const baseWeight = Number(form.dataset.baseWeight) || 1;
+                const defaultLabel = (form.dataset.defaultWeightLabel || '').trim();
+
+                const formatCurrency = (value) => `Rp ${currencyFormatter.format(value)}`;
+                const formatCustomWeightLabel = (value) => {
+                    const normalized = Number(value);
+
+                    if (!Number.isFinite(normalized) || normalized <= 0) {
+                        return defaultLabel || '';
+                    }
+
+                    const formatted = normalized.toLocaleString('id-ID', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    });
+
+                    return `${formatted} kg`;
+                };
+
+                const refresh = () => {
+                    let weight = baseWeight;
+                    let label = defaultLabel || formatCustomWeightLabel(baseWeight);
+
+                    if (customInput && customInput.value) {
+                        const customValue = Number(customInput.value);
+
+                        if (customValue > 0) {
+                            weight = customValue;
+                            label = `${customValue.toLocaleString('id-ID', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })} kg`;
+                        }
+                    }
+
+                    if ((!customInput || !customInput.value) && variantSelect) {
+                        const selectedOption = variantSelect.selectedOptions[0];
+
+                        if (selectedOption) {
+                            const variantWeight = Number(selectedOption.dataset.variantWeight) || 0;
+
+                            if (variantWeight > 0) {
+                                weight = variantWeight;
+                                label = selectedOption.dataset.variantLabel || label;
+                            }
+                        }
+                    }
+
+                    const normalizedBaseWeight = baseWeight > 0 ? baseWeight : 1;
+                    const normalizedWeight = weight > 0 ? weight : normalizedBaseWeight;
+                    const price = normalizedBaseWeight > 0 ? (basePrice * (normalizedWeight / normalizedBaseWeight)) : basePrice;
+                    const finalPrice = Number.isFinite(price) ? price : basePrice;
+
+                    if (priceDisplay) {
+                        priceDisplay.textContent = formatCurrency(finalPrice);
+                    }
+
+                    if (weightDisplay && label) {
+                        weightDisplay.textContent = label;
+                    }
+
+                    if (hiddenUnitPrice) {
+                        hiddenUnitPrice.value = finalPrice.toFixed(2);
+                    }
+
+                    if (hiddenWeight) {
+                        hiddenWeight.value = normalizedWeight;
+                    }
+
+                    if (hiddenWeightLabel) {
+                        hiddenWeightLabel.value = label;
+                    }
+                };
+
+                const handleVariantChange = () => {
+                    if (customInput) {
+                        customInput.value = '';
+                    }
+
+                    refresh();
+                };
+
+                const handleCustomChange = () => {
+                    if (variantSelect) {
+                        variantSelect.selectedIndex = 0;
+                    }
+
+                    refresh();
+                };
+
+                variantSelect?.addEventListener('change', handleVariantChange);
+                customInput?.addEventListener('input', handleCustomChange);
+
+                refresh();
             });
         });
     </script>
