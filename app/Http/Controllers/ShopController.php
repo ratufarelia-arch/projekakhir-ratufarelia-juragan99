@@ -147,6 +147,30 @@ class ShopController extends Controller
         ));
     }
 
+    public function showProduct(Request $request, Product $product): View
+    {
+        $cartItems = $this->loadCartItems($request);
+        $cartQuantity = $cartItems->sum('quantity');
+        $cartTotal = $cartItems->reduce(function ($carry, $item) {
+            $unitPrice = $item['unit_price'] ?? $item['product']->price;
+            return $carry + ($unitPrice * $item['quantity']);
+        }, 0);
+
+        $wishlistItems = $this->loadWishlistItems($request);
+        $wishlistCount = $wishlistItems->count();
+        $wishlistIds = $wishlistItems->pluck('id')->all();
+
+        return view('shop.product-detail', compact(
+            'product',
+            'cartItems',
+            'cartQuantity',
+            'cartTotal',
+            'wishlistItems',
+            'wishlistCount',
+            'wishlistIds'
+        ));
+    }
+
     public function showCart(Request $request): View
     {
         $cartItems = $this->loadCartItems($request);
