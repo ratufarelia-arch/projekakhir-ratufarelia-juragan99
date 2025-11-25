@@ -65,7 +65,8 @@ class ShopController extends Controller
         $cartItems = $this->loadCartItems($request);
         $cartQuantity = $cartItems->sum('quantity');
         $cartTotal = $cartItems->reduce(function ($carry, $item) {
-            return $carry + ($item['product']->price * $item['quantity']);
+            $unitPrice = $item['unit_price'] ?? $item['product']->price;
+            return $carry + ($unitPrice * $item['quantity']);
         }, 0);
 
         $wishlistItems = $this->loadWishlistItems($request);
@@ -122,7 +123,8 @@ class ShopController extends Controller
         $cartItems = $this->loadCartItems($request);
         $cartQuantity = $cartItems->sum('quantity');
         $cartTotal = $cartItems->reduce(function ($carry, $item) {
-            return $carry + ($item['product']->price * $item['quantity']);
+            $unitPrice = $item['unit_price'] ?? $item['product']->price;
+            return $carry + ($unitPrice * $item['quantity']);
         }, 0);
 
         $wishlistItems = $this->loadWishlistItems($request);
@@ -150,7 +152,8 @@ class ShopController extends Controller
         $cartItems = $this->loadCartItems($request);
         $cartQuantity = $cartItems->sum('quantity');
         $cartTotal = $cartItems->reduce(function ($carry, $item) {
-            return $carry + ($item['product']->price * $item['quantity']);
+            $unitPrice = $item['unit_price'] ?? $item['product']->price;
+            return $carry + ($unitPrice * $item['quantity']);
         }, 0);
 
         $wishlistItems = $this->loadWishlistItems($request);
@@ -172,11 +175,38 @@ class ShopController extends Controller
         $data = $request->validate([
             'product_id' => ['required', 'exists:products,id'],
             'quantity' => ['nullable', 'integer', 'min:1'],
+            'unit_price' => ['nullable', 'numeric', 'min:0'],
+            'selected_weight' => ['nullable', 'numeric', 'min:0'],
+            'selected_weight_label' => ['nullable', 'string', 'max:255'],
         ]);
 
+        $product = Product::findOrFail($data['product_id']);
         $quantity = $data['quantity'] ?? 1;
         $cart = $request->session()->get('cart', []);
-        $cart[$data['product_id']] = ($cart[$data['product_id']] ?? 0) + $quantity;
+
+        $existingEntry = $this->normalizeCartEntry($product, $cart[$product->id] ?? null);
+        $existingQuantity = $existingEntry['quantity'] ?? 0;
+
+        $unitPrice = isset($data['unit_price']) && $data['unit_price'] > 0 ? (float) $data['unit_price'] : (float) $product->price;
+        $weight = (float) ($data['selected_weight'] ?? ($existingEntry['weight_in_kg'] ?? $product->weight ?? 0));
+
+        if ($weight <= 0) {
+            $weight = $product->weight ?? 0;
+        }
+
+        $label = trim((string) ($data['selected_weight_label'] ?? $existingEntry['weight_label']));
+
+        if ($label === '') {
+            $label = $this->formatWeightLabel($weight ?: ($product->weight ?? 0));
+        }
+
+        $cart[$product->id] = [
+            'quantity' => $existingQuantity + $quantity,
+            'unit_price' => round($unitPrice, 2),
+            'weight_in_kg' => $weight,
+            'weight_label' => $label,
+        ];
+
         $request->session()->put('cart', $cart);
 
         return back()->with('success', __('Product added to cart.'));
@@ -200,11 +230,17 @@ class ShopController extends Controller
         ]);
 
         $cart = $request->session()->get('cart', []);
+        $existingEntry = $this->normalizeCartEntry($product, $cart[$product->id] ?? null);
 
         if ($data['quantity'] <= 0) {
             unset($cart[$product->id]);
         } else {
-            $cart[$product->id] = $data['quantity'];
+            $cart[$product->id] = [
+                'quantity' => $data['quantity'],
+                'unit_price' => $existingEntry['unit_price'],
+                'weight_in_kg' => $existingEntry['weight_in_kg'],
+                'weight_label' => $existingEntry['weight_label'],
+            ];
         }
 
         $request->session()->put('cart', $cart);
@@ -241,7 +277,8 @@ class ShopController extends Controller
         $cartItems = $this->loadCartItems($request);
         $cartQuantity = $cartItems->sum('quantity');
         $cartTotal = $cartItems->reduce(function ($carry, $item) {
-            return $carry + ($item['product']->price * $item['quantity']);
+            $unitPrice = $item['unit_price'] ?? $item['product']->price;
+            return $carry + ($unitPrice * $item['quantity']);
         }, 0);
 
         $wishlistItems = $this->loadWishlistItems($request);
