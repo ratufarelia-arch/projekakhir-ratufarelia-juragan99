@@ -10,13 +10,29 @@ use Illuminate\View\View;
 
 class AdminOrderController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $orders = Order::withCount('items')
-            ->orderByDesc('created_at')
-            ->paginate(12);
+        $search = trim((string) $request->input('search'));
 
-        return view('admin.orders.index', compact('orders'));
+        $query = Order::withCount('items');
+
+        if ($search !== '') {
+            $query->where(function ($query) use ($search) {
+                $query->where('customer_name', 'like', "%{$search}%")
+                    ->orWhere('customer_email', 'like', "%{$search}%")
+                    ->orWhere('customer_phone', 'like', "%{$search}%");
+
+                if (is_numeric($search)) {
+                    $query->orWhere('id', $search);
+                }
+            });
+        }
+
+        $orders = $query->orderByDesc('created_at')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('admin.orders.index', compact('orders', 'search'));
     }
 
     public function show(Order $order): View
