@@ -50,7 +50,7 @@
                 <div class="mt-4 text-sm text-zinc-500">
                     <p>Jl. Pahlawan No. 9, Cileungsi</p>
                     <p>Bogor, Jawa Barat 16820</p>
-                    <p>support@jurangan99.id</p>
+                    <p>ratufarelia@gmail.com</p>
                 </div>
             </div>
 
