@@ -90,5 +90,63 @@
                 @endforeach
             </div>
         </section>
+
+        @php
+            $proofItems = $order->items->filter(fn($item) => !empty($item->payment_proof));
+        @endphp
+
+        @if($proofItems->isNotEmpty())
+            <section class="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+                <h2 class="text-lg font-semibold text-zinc-900">{{ __('Bukti Pembayaran') }}</h2>
+                <p class="mt-2 text-xs text-zinc-500">{{ __('Klik untuk melihat bukti pembayaran yang diunggah per produk.') }}</p>
+                <div class="mt-4 space-y-4">
+                    @foreach($proofItems as $item)
+                        @php
+                            $proofUrl = asset('storage/' . $item->payment_proof);
+                            $proofExtension = Str::of($item->payment_proof)->afterLast('.')->lower();
+                            $isImageProof = in_array($proofExtension, ['png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp']);
+                        @endphp
+
+                        <div class="flex flex-col gap-4 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
+                            <div class="flex items-center justify-between gap-3">
+                                <p class="font-semibold text-zinc-900">{{ $item->product_name }}</p>
+                                <span class="text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-600">{{ __('Uploaded') }}</span>
+                            </div>
+
+                            <div class="grid gap-4 md:grid-cols-[1fr_auto]">
+                                <div class="h-52 overflow-hidden rounded-2xl border border-zinc-100 bg-white">
+                                    @if($isImageProof)
+                                        <img
+                                            src="{{ $proofUrl }}"
+                                            alt="{{ __('Bukti pembayaran untuk :product', ['product' => $item->product_name]) }}"
+                                            class="h-full w-full object-cover"
+                                        />
+                                    @else
+                                        <div class="flex h-full items-center justify-center px-4 text-xs uppercase tracking-[0.3em] text-zinc-500">
+                                            {{ __('Preview tidak tersedia') }}
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="flex max-h-52 flex-col justify-between gap-2">
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Nama file') }}</p>
+                                        <p class="text-sm font-medium text-zinc-900">{{ basename($item->payment_proof) }}</p>
+                                    </div>
+                                    <a
+                                        href="{{ $proofUrl }}"
+                                        class="inline-flex items-center justify-center rounded-xl border border-emerald-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-700 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-50"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        {{ __('Buka bukti pembayaran') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
     </div>
 </x-layouts.app>
