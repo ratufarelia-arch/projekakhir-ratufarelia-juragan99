@@ -195,6 +195,30 @@
                         </div>
                     </section>
 
+                    {{-- Meat care tips --}}
+                    <section class="rounded-3xl border border-emerald-200 bg-emerald-50/70 p-6 shadow-sm">
+                        <h2 class="mb-3 text-sm font-bold uppercase tracking-[0.4em] text-emerald-700">{{ __('Tips Menyimpan Daging') }}</h2>
+                        <p class="text-sm text-emerald-900">{{ __('Supaya daging tetap segar, simpan dengan cara berikut:') }}</p>
+                        <ul class="mt-3 space-y-2 text-sm text-zinc-700">
+                            <li class="flex gap-2">
+                                <span class="mt-0.5 text-emerald-600">•</span>
+                                <span>{{ __('Segera pindahkan ke kulkas suhu 0-4°C atau bekukan jika belum diolah dalam 3 jam.') }}</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="mt-0.5 text-emerald-600">•</span>
+                                <span>{{ __('Simpan daging di bagian paling dingin, gunakan kemasan rapat agar tidak terkena udara.') }}</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="mt-0.5 text-emerald-600">•</span>
+                                <span>{{ __('Untuk beku, pakai kantong vakum dan beri label tanggal agar rotasi stok mudah.') }}</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="mt-0.5 text-emerald-600">•</span>
+                                <span>{{ __('Jangan mencairkan dan membekukan ulang agar tekstur tetap terjaga.') }}</span>
+                            </li>
+                        </ul>
+                    </section>
+
                     @if($order->status === Order::STATUS_COMPLETED)
                         <section class="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
                             <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-zinc-400">{{ __('Ulasan & Rating Produk') }}</h2>
