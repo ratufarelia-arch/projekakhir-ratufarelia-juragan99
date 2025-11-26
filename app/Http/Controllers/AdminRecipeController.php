@@ -10,11 +10,25 @@ use Illuminate\Validation\Rule;
 
 class AdminRecipeController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $recipes = Recipe::orderByDesc('published_at')->paginate(12);
+        $search = trim((string) $request->input('search'));
 
-        return view('admin.recipes.index', compact('recipes'));
+        $query = Recipe::query();
+
+        if ($search !== '') {
+            $query->where(function ($query) use ($search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}%")
+                    ->orWhere('excerpt', 'like', "%{$search}%");
+            });
+        }
+
+        $recipes = $query->orderByDesc('published_at')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('admin.recipes.index', compact('recipes', 'search'));
     }
 
     public function create(): View
