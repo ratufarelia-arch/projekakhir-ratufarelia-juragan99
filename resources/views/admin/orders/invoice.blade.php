@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Invoice #{{ $order->id }} - Jurangan99</title>
+    <title>Invoice #{{ $order->id }} - Juragan99</title>
     
    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +44,7 @@
             <div>
                 {{-- Logo Toko --}}
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="text-2xl font-extrabold text-emerald-600 tracking-tight">Jurangan<span class="text-zinc-900">99</span></span>
+                    <span class="text-2xl font-extrabold text-emerald-600 tracking-tight">Juragan<span class="text-zinc-900">99</span></span>
                 </div>
                 <p class="text-sm text-zinc-500">Penyedia Daging Sapi Segar & Berkualitas</p>
                 <div class="mt-4 text-sm text-zinc-500">
@@ -151,7 +151,7 @@
                 <div>
                     <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-3">Informasi Tambahan</h4>
                     <p class="text-sm text-zinc-500 leading-relaxed">
-                        Terima kasih telah berbelanja di Jurangan99. Harap simpan invoice ini sebagai bukti transaksi yang sah.
+                        Terima kasih telah berbelanja di Juragan99. Harap simpan invoice ini sebagai bukti transaksi yang sah.
                         Untuk pertanyaan, silakan hubungi kontak kami di atas.
                     </p>
                 </div>
@@ -186,7 +186,7 @@
                 <div class="w-40">
                     <p class="text-xs font-bold uppercase text-zinc-400 mb-16">Hormat Kami</p>
                     <div class="border-t border-zinc-300"></div>
-                    <p class="text-sm mt-1 font-medium">Jurangan99</p>
+                    <p class="text-sm mt-1 font-medium">Juragan99</p>
                 </div>
             </div>
         </div>

@@ -22,7 +22,7 @@ return [
         ],
         'friday' => [
             'open' => '08:00',
-            'close' => '22:00',
+            'close' => '21:00',
         ],
         'saturday' => [
             'open' => '08:00',

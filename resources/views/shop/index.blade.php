@@ -51,7 +51,7 @@
 
     <div class="absolute inset-0 z-20 flex flex-col justify-center p-8 text-white rounded-2xl">
         <div class="max-w-xl">
-            <p class="text-sm uppercase tracking-[0.2em] text-emerald-300 font-semibold">Jurangan99</p>
+            <p class="text-sm uppercase tracking-[0.2em] text-emerald-300 font-semibold">Juragan99</p>
             <h1 class="text-5xl md:text-6xl font-extrabold mt-2 leading-tight">{{ __('Fresh curated products') }}</h1>
             <p class="text-lg mt-3 max-w-md">{{ __('Browse our premium catalog, filter by type, and find the perfect cut for your culinary needs.') }}</p>
             
@@ -87,7 +87,7 @@
                             <p class="text-sm text-gray-500">{{ __('Ulasan pelanggan') }}</p>
                             <h2 class="text-2xl font-semibold text-gray-900">{{ __('Rating kualitas daging') }}</h2>
                         </div>
-                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">{{ __('Card carousel terus bergerak dari kanan ke kiri.') }}</p>
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">{{ __('') }}</p>
                     </div>
                     <div class="overflow-hidden">
                         <!-- marquee-track di ambil dari style  -->

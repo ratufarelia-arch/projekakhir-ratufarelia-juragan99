@@ -7,7 +7,7 @@
     <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-0">
         <div class="flex items-center gap-4">
             <a href="{{ route('home') }}" class="text-xl font-extrabold text-gray-800 tracking-tight">
-            <span class="text-emerald-600 text-xl font-bold tracking-wide">Jurangan99</span>
+            <span class="text-emerald-600 text-xl font-bold tracking-wide">Juragan99</span>
        </a>
         </div>
 

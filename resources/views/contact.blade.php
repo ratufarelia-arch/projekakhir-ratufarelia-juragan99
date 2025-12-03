@@ -23,7 +23,7 @@
                     {{ __('Mari Terhubung dengan Kami') }}
                 </h1>
                 <p class="text-lg leading-relaxed text-zinc-500">
-                    {{ __('Tim Jurangan 99 siap membantu kebutuhan daging premium Anda. Silakan hubungi kami atau kunjungi showroom kami di Cileungsi.') }}
+                    {{ __('Tim Juragan 99 siap membantu kebutuhan daging premium Anda. Silakan hubungi kami atau kunjungi showroom kami di Cileungsi.') }}
                 </p>
             </div>
 
@@ -115,7 +115,7 @@
                      {{-- Card 3: Map (Placed here to balance height with the form) --}}
                      <div class="overflow-hidden rounded-3xl border border-zinc-100 shadow-lg shadow-zinc-200/40">
                         <iframe
-                            title="Peta Jurangan 99"
+                            title="Peta Juragan 99"
                             src="{{ $mapSrc }}"
                             class="h-48 w-full grayscale transition duration-500 hover:grayscale-0"
                             loading="lazy"

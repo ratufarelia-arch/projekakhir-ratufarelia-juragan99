@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Invoice #{{ $order->id }} - Jurangan99</title>
+    <title>Invoice #{{ $order->id }} - Juragan99</title>
     
     {{-- Tailwind CSS via CDN --}}
     <script src="https://cdn.tailwindcss.com"></script>
@@ -192,7 +192,7 @@
                     <div class="w-40">
                         <p class="text-xs font-bold uppercase text-zinc-400 mb-16">Hormat Kami</p>
                         <div class="border-t border-zinc-300 pt-2">
-                            <p class="text-sm font-semibold">Jurangan99</p>
+                            <p class="text-sm font-semibold">Juragan99</p>
                         </div>
                     </div>
                 </div>

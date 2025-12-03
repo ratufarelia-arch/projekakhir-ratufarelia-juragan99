@@ -58,7 +58,7 @@
                                     <input type="text" name="customer_name" 
                                         value="{{ old('customer_name', $user->name ?? '') }}"
                                         class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-3 text-sm font-medium text-zinc-900 placeholder-zinc-400 focus:border-emerald-500 focus:bg-white focus:ring-emerald-500/20"
-                                        placeholder="Contoh: Rifan Afendi">
+                                        placeholder="Contoh: Jasmine">
                                     @error('customer_name') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
                                 </div>
 
