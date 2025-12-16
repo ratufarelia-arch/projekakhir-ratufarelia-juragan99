@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 
-Route::aliasMiddleware('role', \App\Http\Middleware\EnsureUserHasRole::class);
+// Route::aliasMiddleware('role', admin\App\Http\Middleware\EnsureUserHasRole::class);
 
 Route::get('/', [ShopController::class, 'index'])->name('home');
 Route::get('/product', [ShopController::class, 'showProducts'])->name('shop.products.index');
@@ -61,7 +61,8 @@ Route::view('dashboard', 'dashboard')
         ->name('two-factor.show');
 });
 
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('reports/sales', [AdminOrderController::class, 'salesReport'])->name('admin.reports.sales');
     Route::resource('products', AdminProductController::class)

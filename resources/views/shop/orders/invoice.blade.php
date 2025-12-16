@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Invoice #{{ $order->id }} - Juragan99</title>
+    <title>Invoice #{{ $order->id }} - Jurangan99</title>
     
     {{-- Tailwind CSS via CDN --}}
     <script src="https://cdn.tailwindcss.com"></script>
@@ -163,7 +163,17 @@
             <div>
                 <h4 class="mb-3 text-xs font-bold uppercase tracking-wider text-zinc-400">Bukti Pembayaran</h4>
                 @php
-                    $proofItems = $order->items->filter(fn($item) => !empty($item->payment_proof));
+                    $proofItems = collect();
+                    if ($order->payment_proof) {
+                        $proofItems->push((object) [
+                            'product_name' => __('Pesanan Anda'),
+                            'payment_proof' => $order->payment_proof,
+                        ]);
+                    }
+
+                    if ($proofItems->isEmpty()) {
+                        $proofItems = $order->items->filter(fn ($item) => !empty($item->payment_proof));
+                    }
                 @endphp
                 @if($proofItems->isNotEmpty())
                     <ul class="space-y-2">
@@ -192,7 +202,7 @@
                     <div class="w-40">
                         <p class="text-xs font-bold uppercase text-zinc-400 mb-16">Hormat Kami</p>
                         <div class="border-t border-zinc-300 pt-2">
-                            <p class="text-sm font-semibold">Juragan99</p>
+                            <p class="text-sm font-semibold">Jurangan99</p>
                         </div>
                     </div>
                 </div>

@@ -93,7 +93,17 @@
 
                 {{-- 2. Payment Proofs --}}
                 @php
-                    $proofItems = $order->items->filter(fn($item) => !empty($item->payment_proof));
+                    $proofItems = collect();
+                    if ($order->payment_proof) {
+                        $proofItems->push((object) [
+                            'product_name' => __('Pesanan Anda'),
+                            'payment_proof' => $order->payment_proof,
+                        ]);
+                    }
+
+                    if ($proofItems->isEmpty()) {
+                        $proofItems = $order->items->filter(fn($item) => !empty($item->payment_proof));
+                    }
                 @endphp
 
                 @if($proofItems->isNotEmpty())

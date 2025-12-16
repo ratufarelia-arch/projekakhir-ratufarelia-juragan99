@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 72 72" style="enable-background:new 0 0 72 72;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:url(#SVGID_1_);}
+	.st2{fill:url(#SVGID_00000065785207705590537760000014719128294517615744_);}
+	.st3{fill:url(#SVGID_00000021805066630137493340000018265367824141771444_);}
+</style>
+<rect class="st0" width="72" height="72"/>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="6.89" y1="36" x2="65.11" y2="36">
+	<stop  offset="0" style="stop-color:#FF931E"/>
+	<stop  offset="1" style="stop-color:#FBB03B"/>
+</linearGradient>
+<path class="st1" d="M36,10.95c7.26,6.01,20.59,11.97,25.83,14.19C60.68,32.16,55.56,54.41,36,61.92
+	c-19.56-7.5-24.68-29.76-25.83-36.77C15.41,22.92,28.74,16.96,36,10.95 M36,6.89C28.62,14.55,6.89,23.26,6.89,23.26
+	S9.68,55.91,36,65.11c26.32-9.2,29.11-41.85,29.11-41.85S43.38,14.55,36,6.89L36,6.89z"/>
+<linearGradient id="SVGID_00000145745295844133972490000013604046582765794177_" gradientUnits="userSpaceOnUse" x1="42.9975" y1="41.3406" x2="30.4017" y2="31.7236">
+	<stop  offset="0" style="stop-color:#FF931E"/>
+	<stop  offset="1" style="stop-color:#FBB03B"/>
+</linearGradient>
+<polygon style="fill:url(#SVGID_00000145745295844133972490000013604046582765794177_);" points="37.97,28.93 34.02,28.93 
+	34.02,34.14 28.74,34.14 28.74,37.86 34.02,37.86 34.02,43.05 37.97,43.05 37.97,37.86 43.27,37.86 43.27,34.14 37.97,34.14 "/>
+<linearGradient id="SVGID_00000000220792483092206190000008112196043550588343_" gradientUnits="userSpaceOnUse" x1="21.2776" y1="36" x2="50.7224" y2="36">
+	<stop  offset="0" style="stop-color:#FF931E"/>
+	<stop  offset="1" style="stop-color:#FBB03B"/>
+</linearGradient>
+<path style="fill:url(#SVGID_00000000220792483092206190000008112196043550588343_);" d="M36,24.28c6.46,0,11.72,5.26,11.72,11.72
+	S42.46,47.72,36,47.72S24.28,42.46,24.28,36S29.54,24.28,36,24.28 M36,21.28c-8.12,0-14.72,6.6-14.72,14.72S27.88,50.72,36,50.72
+	S50.72,44.12,50.72,36S44.12,21.28,36,21.28L36,21.28z"/>
+</svg>

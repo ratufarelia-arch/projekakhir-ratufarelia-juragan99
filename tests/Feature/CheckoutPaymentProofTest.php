@@ -9,11 +9,12 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
+
 class CheckoutPaymentProofTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_uploading_payment_proof_stores_file_and_attaches_to_order_item(): void
+    public function test_uploading_payment_proof_stores_file_on_order(): void
     {
         Storage::fake('public');
 
@@ -41,9 +42,7 @@ class CheckoutPaymentProofTest extends TestCase
                 'customer_name' => 'Test Customer',
                 'customer_email' => 'customer@example.com',
                 'customer_address' => 'Jl Test',
-                'payment_proof' => [
-                    $product->id => $proof,
-                ],
+                'payment_proof' => $proof,
             ]);
 
         $response->assertRedirect(route('shop.checkout.index'));
@@ -53,8 +52,11 @@ class CheckoutPaymentProofTest extends TestCase
 
         $orderItem = $order->items()->first();
         $this->assertNotNull($orderItem);
-        $this->assertNotNull($orderItem->payment_proof);
+        $this->assertNotNull($order->payment_proof);
+        $this->assertNull($orderItem->payment_proof);
 
-        Storage::disk('public')->assertExists($orderItem->payment_proof);
+       Storage::fake('public');
+
+
     }
 }

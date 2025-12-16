@@ -42,13 +42,14 @@ class CheckoutController extends Controller
             'customer_phone' => ['nullable', 'string', 'max:40'],
             'customer_address' => ['required', 'string'],
             'notes' => ['nullable', 'string'],
-            'payment_proof' => ['nullable', 'array'],
-            'payment_proof.*' => ['nullable', 'file', 'mimes:png,jpg,jpeg,pdf', 'max:2048'],
+            'payment_proof' => ['nullable', 'file', 'mimes:png,jpg,jpeg,pdf', 'max:2048'],
         ]);
 
         $total = $cartItems->reduce(function ($carry, $item) {
             return $carry + ($item['product']->price * $item['quantity']);
         }, 0);
+
+        $paymentProofPath = $request->file('payment_proof')?->store('payment_proofs', 'public');
 
         $order = Order::create([
             'user_id' => $request->user()?->id,
@@ -60,9 +61,10 @@ class CheckoutController extends Controller
             'total' => $total,
             'status' => Order::STATUS_PENDING,
             'payment_status' => 'pending',
+            'payment_proof' => $paymentProofPath,
         ]);
 
-        $items = $cartItems->map(function ($item) use ($request) {
+        $items = $cartItems->map(function ($item) {
             $product = $item['product'];
             $quantity = $item['quantity'];
 
@@ -73,8 +75,6 @@ class CheckoutController extends Controller
                 }
             }
 
-            $proofPath = $request->file('payment_proof.' . $product->id)?->store('payment_proofs', 'public');
-
             return [
                 'product_id' => $product->id,
                 'product_name' => $product->name,
@@ -82,7 +82,6 @@ class CheckoutController extends Controller
                 'unit_price' => $product->price,
                 'quantity' => $quantity,
                 'total' => $product->price * $quantity,
-                'payment_proof' => $proofPath,
             ];
         });
 

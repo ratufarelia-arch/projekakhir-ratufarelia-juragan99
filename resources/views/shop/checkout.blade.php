@@ -58,7 +58,7 @@
                                     <input type="text" name="customer_name" 
                                         value="{{ old('customer_name', $user->name ?? '') }}"
                                         class="w-full rounded-xl border-zinc-200 bg-zinc-50 px-4 py-3 text-sm font-medium text-zinc-900 placeholder-zinc-400 focus:border-emerald-500 focus:bg-white focus:ring-emerald-500/20"
-                                        placeholder="Contoh: Jasmine">
+                                        placeholder="contoh: ratu">
                                     @error('customer_name') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
                                 </div>
 
@@ -129,7 +129,7 @@
                                     <img src="{{ asset('qris.jpg') }}" alt="QRIS" class="h-60 w-full rounded-full object-cover object-center">
                                     <p class="text-xs text-zinc-500">{{ __('A/N: Jurangan 99 · Bank QRIS') }}</p>
                                 </div>
-                                <p class="mt-3 text-xs text-zinc-600">{{ __('Setelah menyelesaikan transfer, unggah satu bukti untuk setiap produk agar konfirmasi bisa berjalan tanpa hambatan.') }}</p>
+                                <p class="mt-3 text-xs text-zinc-600">{{ __('Setelah melakukan transfer, unggah satu bukti pembayaran agar pesanan dapat segera diproses.') }}</p>
                             </div>
 
                             <div class="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm ring-4 ring-zinc-50">
@@ -163,20 +163,21 @@
                                                 </p>
                                             </div>
                                         </div>
-                                        <div class="mt-2 flex flex-col gap-2 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 px-3 py-2 sm:px-4 sm:py-3">
-                                            <label class="text-[11px] font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Upload bukti pembayaran :product', ['product' => $item['product']->name]) }}</label>
-                                            <input
-                                                type="file"
-                                                name="payment_proof[{{ $item['product']->id }}]"
-                                                accept="image/png,image/jpeg,image/jpg,application/pdf"
-                                                class="text-xs text-zinc-500"
-                                            >
-                                            <p class="text-[11px] text-zinc-400">{{ __('PNG, JPG, atau PDF maksimal 2MB per produk.') }}</p>
-                                            @error('payment_proof.' . $item['product']->id)
-                                                <p class="text-xs text-rose-500">{{ $message }}</p>
-                                            @enderror
-                                        </div>
                                     @endforeach
+                                </div>
+
+                                <div class="mt-6 flex flex-col gap-2 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 px-3 py-2 sm:px-4 sm:py-3">
+                                    <label class="text-[11px] font-semibold uppercase tracking-[0.3em] text-zinc-500">{{ __('Unggah bukti pembayaran') }}</label>
+                                    <input
+                                        type="file"
+                                        name="payment_proof"
+                                        accept="image/png,image/jpeg,image/jpg,application/pdf"
+                                        class="text-xs text-zinc-500"
+                                    >
+                                    <p class="text-[11px] text-zinc-400">{{ __('PNG, JPG, atau PDF maksimal 2MB.') }}</p>
+                                    @error('payment_proof')
+                                        <p class="text-xs text-rose-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 {{-- Divider --}}
